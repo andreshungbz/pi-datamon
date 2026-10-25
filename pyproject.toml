@@ -1,0 +1,18 @@
+[project]
+name = "pi-datamon"
+version = "0.1.0"
+description = "Data acquisition and monitoring system for temperature, humidity, and distance using a Raspberry Pi"
+readme = "README.md"
+authors = [
+    { name = "Andres Hung", email = "2018118240@ub.edu.bz" },
+    { name = "Jennessa Sierra", email = "2021153908@ub.edu.bz" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+pi-datamon = "pi_datamon.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.13.0"]
+build-backend = "uv_build"
