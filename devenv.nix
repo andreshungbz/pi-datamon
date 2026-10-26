@@ -14,6 +14,9 @@
       ruff
     ]
     ++ lib.optionals (stdenv.hostPlatform.isLinux) [
+      # Utility for I2C devices.
+      # https://archive.kernel.org/oldwiki/i2c.wiki.kernel.org/index.php/I2C_Tools.html
+      i2c-tools
       # Low-level C and Python libraries for manipulating GPIO.
       # https://github.com/joan2937/lg
       python314Packages.lgpio
