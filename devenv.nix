@@ -14,8 +14,9 @@
       ruff
     ]
     ++ lib.optionals (stdenv.hostPlatform.isLinux) [
-      python3Packages.gpiozero
-      python3Packages.lgpio
+      # Low-level C and Python libraries for manipulating GPIO.
+      # https://github.com/joan2937/lg
+      python314Packages.lgpio
     ];
 
   # https://devenv.sh/languages/

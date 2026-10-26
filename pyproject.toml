@@ -8,7 +8,23 @@ authors = [
     { name = "Jennessa Sierra", email = "2021153908@ub.edu.bz" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    # High-level library for interacting with GPIO on Raspberry Pi.
+    # https://github.com/gpiozero/gpiozero
+    "gpiozero>=2.0.1.post3",
+    # Driver for OLED matrix displays.
+    # https://github.com/rm-hull/luma.oled
+    "luma-oled>=3.16.0",
+    # Python library for visualizing data and creating plots.
+    # https://github.com/matplotlib/matplotlib
+    "matplotlib>=3.11.2",
+    # Python Imaging Library (PIL) for drawing graphics/text on screen canvas.
+    # https://github.com/python-pillow/Pillow
+    "pillow>=13.0.0",
+    # Low-level I2C/SMBus communication library.
+    # https://github.com/kplindegaard/smbus2
+    "smbus2>=0.6.1",
+]
 
 [project.scripts]
 pi-datamon = "pi_datamon.main:main"
