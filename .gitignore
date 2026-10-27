@@ -14,6 +14,9 @@ __pycache__/
 # lgpio notification pipes
 .lgd-nfy*
 
+# data logs
+log/
+
 # C extensions
 *.so
 
