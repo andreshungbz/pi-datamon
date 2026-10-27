@@ -10,7 +10,7 @@ Data acquisition and monitoring system for temperature, humidity, and distance u
 sudo raspi-config
 ```
 
-2. Optionally increase performance of I2C by adding the following to `/boot/config.txt`. Reboot afterwards.
+2. Optionally increase performance of I2C by adding the following to `/boot/firmware/config.txt`. Reboot afterwards.
 
 ```
 dtparam=i2c_arm=on,i2c_baudrate=400000
