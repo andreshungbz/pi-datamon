@@ -12,32 +12,24 @@ format:
 
 # Variables
 PI_HOST := "andreshung@cmps4252-pi-4.local"
-PI_LOG_DIR := "~/Projects/pi-datamon/log"
+PI_LOG_DIR := "/home/andreshung/Projects/pi-datamon/log"
 LOCAL_LOG_DIR := invocation_directory() + "/log"
 
-# Mount the remote Pi log directory into local ./log
+# Mount the remote Pi log directory into local ./log (press Ctrl+C to unmount)
 mount:
     @mkdir -p {{ LOCAL_LOG_DIR }}
-    @if mountpoint -q {{ LOCAL_LOG_DIR }} 2>/dev/null; then \
-        echo "Log directory is already mounted."; \
-    else \
-        echo "Ensuring remote log directory exists on Pi..."; \
-        ssh {{ PI_HOST }} "mkdir -p {{ PI_LOG_DIR }}"; \
-        echo "Mounting {{ PI_HOST }}:{{ PI_LOG_DIR }} to {{ LOCAL_LOG_DIR }}..."; \
-        sshfs {{ PI_HOST }}:{{ PI_LOG_DIR }} {{ LOCAL_LOG_DIR }} \
-            -o reconnect \
-            -o ServerAliveInterval=15 \
-            -o ServerAliveCountMax=3 \
-            -o defer_permissions; \
-        echo "Successfully mounted!"; \
-    fi
+    @echo "Ensuring remote log directory exists on Pi..."
+    @ssh {{ PI_HOST }} "mkdir -p {{ PI_LOG_DIR }}"
+    @echo "Mounting {{ PI_HOST }}:{{ PI_LOG_DIR }} to {{ LOCAL_LOG_DIR }}"
+    @sshfs {{ PI_HOST }}:{{ PI_LOG_DIR }} {{ LOCAL_LOG_DIR }} \
+        -f \
+        -o reconnect \
+        -o ServerAliveInterval=15 \
+        -o ServerAliveCountMax=3 \
+        -o defer_permissions
 
-# Unmount the local log directory
+# Emergency cleanup if a mount hangs or isn't cleared by Ctrl+C
 unmount:
-    @if mountpoint -q {{ LOCAL_LOG_DIR }} 2>/dev/null || umount -q {{ LOCAL_LOG_DIR }} 2>/dev/null; then \
-        echo "Unmounting {{ LOCAL_LOG_DIR }}..."; \
-        umount {{ LOCAL_LOG_DIR }} 2>/dev/null || umount -f {{ LOCAL_LOG_DIR }} 2>/dev/null || diskutil unmount force {{ LOCAL_LOG_DIR }}; \
-        echo "Successfully unmounted."; \
-    else \
-        echo "Log directory is not currently mounted."; \
-    fi
+    @echo "Cleaning up local mount point {{ LOCAL_LOG_DIR }}..."
+    @diskutil unmount force {{ LOCAL_LOG_DIR }} 2>/dev/null || umount -f {{ LOCAL_LOG_DIR }} 2>/dev/null || true
+    @echo "Unmounted."
