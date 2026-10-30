@@ -2,9 +2,9 @@
 default:
     @just --list --unsorted
 
-# Run Pi Datamon Sensors
+# Run Pi Datamon App
 run-sensors:
-    @uv run pi-datamon-sensors
+    @uv run pi-datamon-app
 
 # Run Pi Datamon Visualization
 run-visualization:

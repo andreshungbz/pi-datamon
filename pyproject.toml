@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pi-datamon-sensors = "pi_datamon.sensors.main:main"
+pi-datamon-app = "pi_datamon.app.main:main"
 pi-datamon-visualization = "pi_datamon.visualization.main:main"
 
 [build-system]

@@ -2,6 +2,7 @@ import time
 
 import smbus2  # type: ignore
 
+# Default I2C Bus and Temperature/Humidity Sensor Address Configuration
 I2C_BUS_ID = 1
 AHT20_I2C_ADDR = 0x38
 
