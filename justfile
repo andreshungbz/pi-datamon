@@ -2,9 +2,9 @@
 default:
     @just --list --unsorted
 
-# Run Pi Datamon
-run:
-    @uv run pi-datamon
+# Run Pi Datamon Sensors
+run-sensors:
+    @uv run pi-datamon-sensors
 
 # Format code with ruff
 format:

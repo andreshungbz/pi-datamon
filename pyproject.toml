@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pi-datamon = "pi_datamon.main:main"
+pi-datamon-sensors = "pi_datamon.sensors.main:main"
 
 [build-system]
 requires = ["uv_build>=0.12.22,<0.13.0"]
