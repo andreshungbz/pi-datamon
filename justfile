@@ -6,6 +6,10 @@ default:
 run-sensors:
     @uv run pi-datamon-sensors
 
+# Run Pi Datamon Visualization
+run-visualization:
+    @uv run pi-datamon-visualization
+
 # Format code with ruff
 format:
     @ruff check --fix
