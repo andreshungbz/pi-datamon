@@ -4,12 +4,18 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from gpiozero import Button  # type: ignore
+from rich.live import Live
 
 from pi_datamon.app.distance import HCSR04
 from pi_datamon.app.oled import SSD1306
 from pi_datamon.app.temp_humid import AHT20
 from pi_datamon.common.console import console, print_introduction
-from pi_datamon.common.utils import append_csv_row, get_repo_root, init_csv_writer
+from pi_datamon.common.utils import (
+    append_csv_row,
+    get_repo_root,
+    init_csv_writer,
+    make_status_table,
+)
 
 # Default I2C Bus
 I2C_BUS_ID = 1
@@ -49,13 +55,18 @@ def main() -> None:
 
     start_time = time.time()
     console.print(
-        f"Logging metrics to [cyan]{CSV_FILE_PATH}[/cyan]. Press [bold red]Ctrl+C[/bold red] to exit.\n"
+        f"Logging to [cyan]{CSV_FILE_PATH}[/cyan]. Press [bold red]Ctrl+C[/bold red] to exit."
     )
 
     try:
-        with console.status(
-            "[bold green]Sampling sensors...[/bold green]", spinner="dots"
-        ) as status:
+        # Create initial status layout.
+        now = datetime.now(TIMEZONE)
+        iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+        initial_table = make_status_table(
+            iso_timestamp, 0, 0.0, 0.0, 0.0, mode=oled_display.mode
+        )
+
+        with Live(initial_table, console=console, refresh_per_second=4) as live:
             # Main Program Loop
             while True:
                 # Calculate Elapsed_Seconds.
@@ -91,14 +102,16 @@ def main() -> None:
                     temperature=temp_c, humidity=hum_pct, distance=dist_cm
                 )
 
-                # Update live status text with active reading summary.
-                status.update(
-                    f"[bold green]Polling Active[/bold green] | "
-                    f"Timestamp: [dim]{iso_timestamp}[/dim] | "
-                    f"Elapsed_Seconds: [cyan]{elapsed_seconds:.1f}s[/cyan] | "
-                    f"Temperature_C: [yellow]{temp_c:.1f}°C[/yellow] | "
-                    f"Humidity_Percent: [blue]{hum_pct:.1f}%[/blue] | "
-                    f"Distance_cm: [magenta]{dist_cm:.1f}cm[/magenta]"
+                # Refresh the terminal display.
+                live.update(
+                    make_status_table(
+                        iso_timestamp,
+                        elapsed_seconds,
+                        temp_c,
+                        hum_pct,
+                        dist_cm,
+                        mode=oled_display.mode,
+                    )
                 )
 
                 # Sleep for the remainder of the polling interval, accounting for execution time.
@@ -106,7 +119,7 @@ def main() -> None:
                 sleep_duration = max(0.0, POLLING_INTERVAL - elapsed_execution)
                 time.sleep(sleep_duration)
     except KeyboardInterrupt:
-        console.print("\n[bold yellow]Stopping sensor collection...[/bold yellow]")
+        console.print("[bold yellow]Stopping sensor collection...[/bold yellow]")
     finally:
         # Clean up and close hardware interfaces.
         ultrasonic_sensor.close()
