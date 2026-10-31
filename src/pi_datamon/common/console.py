@@ -19,14 +19,14 @@ def print_introduction(
     repo_url: str = DEFAULT_REPO_URL,
 ) -> None:
     """Print project metadata and repository links."""
-    # Create and configure a Rich table.
+    # Create and configure Rich table.
     table = Table(
         show_header=False, box=box.SQUARE, show_lines=True, padding=(0, 1, 0, 1)
     )
     table.add_column("Label", style=color, justify="center")
     table.add_column("Value", style="white")
 
-    # Add rows
+    # Add rows.
     table.add_row(escape(f"{title}"), description)
     table.add_row(escape("GitHub"), repo_url)
 
