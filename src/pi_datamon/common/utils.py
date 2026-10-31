@@ -2,7 +2,9 @@ import csv
 from pathlib import Path
 
 from rich import box
+from rich.spinner import Spinner
 from rich.table import Table
+from rich.text import Text
 
 MODE_LABELS: dict[int, str] = {
     0: "Temperature",
@@ -74,6 +76,15 @@ def make_status_table(
     else:
         mode_str = mode
 
+    # Create live spinner for mode label.
+    mode_header = Table.grid(padding=(0, 1))
+    mode_header.add_column(justify="left")
+    mode_header.add_column(justify="left")
+    mode_header.add_row(
+        Spinner("dots", style="bold green"),
+        Text("Mode", style="white"),
+    )
+
     # Create and configure Rich table.
     table = Table(
         box=box.SQUARE,
@@ -81,7 +92,7 @@ def make_status_table(
         padding=(0, 1, 0, 1),
         show_header=True,
     )
-    table.add_column("Mode", style="bold green", justify="left")
+    table.add_column(mode_header, style="bold green", justify="left")
     table.add_column("Timestamp", style="white", justify="center")
     table.add_column("Elapsed (s)", style="cyan", justify="right")
     table.add_column("Temp (°C)", style="yellow", justify="right")
