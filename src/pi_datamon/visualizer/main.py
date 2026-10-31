@@ -24,9 +24,27 @@ CSV_FILE_PATH = LOG_DIR / "sensor_log.csv"
 # Visualizer Configuration
 VIEW_WINDOW_WIDTH = 30
 POLL_INTERVAL_MS = 500
+
+# Color Palette Configuration
+BG_COLOR = "#ffffff"
+TEXT_COLOR_DARK = "#111111"
+TICK_COLOR = "#333333"
+GRID_COLOR = "#bbbbbb"
 COLOR_TEMP = "#1f77b4"
 COLOR_HUM = "#2ca02c"
 COLOR_DIST = "#d62728"
+
+# Typography & Sizing Configuration
+FONT_SIZE_MAIN_TITLE = 24
+FONT_SIZE_SUBPLOT_TITLE = 14
+FONT_SIZE_AXIS_LABEL = 12
+FONT_SIZE_TICKS = 10
+LINE_WIDTH = 1.8
+MARKER_SIZE = 4
+
+# Layout & Spacing Configuration
+FIG_RECT_LAYOUT = (0.0, 0.0, 0.94, 0.94)
+SUPTITLE_Y_POSITION = 0.94
 
 # Global State Variables
 _ani: animation.FuncAnimation | None = None  # Matplotlib animation object
@@ -78,70 +96,116 @@ def main() -> None:
     # Set main title.
     fig.suptitle(  # type: ignore
         "Pi Datamon Real-Time Log Visualization",
-        fontsize=20,
+        fontsize=FONT_SIZE_MAIN_TITLE,
         fontweight="bold",
-        color="#111111",
+        color=TEXT_COLOR_DARK,
+        y=SUPTITLE_Y_POSITION,
     )
 
     # Set canvas and subplot background colors.
-    fig.patch.set_facecolor("#ffffff")
+    fig.patch.set_facecolor(BG_COLOR)
     for ax in (ax_temp, ax_hum, ax_dist):
-        ax.set_facecolor("#ffffff")
+        ax.set_facecolor(BG_COLOR)
 
     # Enable X-axis tick labels for all subplots despite shared X-axis.
-    ax_temp.tick_params(labelbottom=True, colors="#333333")
-    ax_hum.tick_params(labelbottom=True, colors="#333333")
-    ax_dist.tick_params(colors="#333333")
+    for ax in (ax_temp, ax_hum, ax_dist):
+        ax.tick_params(labelbottom=True, colors=TICK_COLOR, labelsize=FONT_SIZE_TICKS)
 
     # Set temperature subplot.
     ax_temp.set_title(
         "Temperature Over Time",
         color=COLOR_TEMP,
-        fontsize=10,
+        fontsize=FONT_SIZE_SUBPLOT_TITLE,
         loc="center",
         fontweight="bold",
+        pad=6,
     )
-    ax_temp.set_ylabel("Temperature (°C)", color=COLOR_TEMP, fontweight="bold")
-    ax_temp.set_xlabel("Elapsed Time (s)", fontweight="bold", color="#333333")
-    ax_temp.grid(True, linestyle="--", alpha=0.5, color="#cccccc")
+    ax_temp.set_ylabel(
+        "Temperature (°C)",
+        color=COLOR_TEMP,
+        fontweight="bold",
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_temp.set_xlabel(
+        "Elapsed Time (s)",
+        fontweight="bold",
+        color=TICK_COLOR,
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_temp.grid(True, linestyle="--", alpha=0.5, color=GRID_COLOR)
 
     # Set humidity subplot.
     ax_hum.set_title(
         "Humidity Over Time",
         color=COLOR_HUM,
-        fontsize=10,
+        fontsize=FONT_SIZE_SUBPLOT_TITLE,
         loc="center",
         fontweight="bold",
     )
-    ax_hum.set_ylabel("Humidity (%)", color=COLOR_HUM, fontweight="bold")
-    ax_hum.set_xlabel("Elapsed Time (s)", fontweight="bold", color="#333333")
-    ax_hum.grid(True, linestyle="--", alpha=0.5, color="#cccccc")
+    ax_hum.set_ylabel(
+        "Humidity (%)",
+        color=COLOR_HUM,
+        fontweight="bold",
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_hum.set_xlabel(
+        "Elapsed Time (s)",
+        fontweight="bold",
+        color=TICK_COLOR,
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_hum.grid(True, linestyle="--", alpha=0.5, color=GRID_COLOR)
 
     # Set distance subplot.
     ax_dist.set_title(
         "Distance Over Time",
         color=COLOR_DIST,
-        fontsize=10,
+        fontsize=FONT_SIZE_SUBPLOT_TITLE,
         loc="center",
         fontweight="bold",
     )
-    ax_dist.set_ylabel("Distance (cm)", color=COLOR_DIST, fontweight="bold")
-    ax_dist.set_xlabel("Elapsed Time (s)", fontweight="bold", color="#333333")
-    ax_dist.grid(True, linestyle="--", alpha=0.5, color="#cccccc")
+    ax_dist.set_ylabel(
+        "Distance (cm)",
+        color=COLOR_DIST,
+        fontweight="bold",
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_dist.set_xlabel(
+        "Elapsed Time (s)",
+        fontweight="bold",
+        color=TICK_COLOR,
+        fontsize=FONT_SIZE_AXIS_LABEL,
+    )
+    ax_dist.grid(True, linestyle="--", alpha=0.5, color=GRID_COLOR)
 
     # Initialize persistent line objects for each subplot.
     (line_temp,) = ax_temp.plot(
-        [], [], color=COLOR_TEMP, marker="o", markersize=4, linewidth=1.8
+        [],
+        [],
+        color=COLOR_TEMP,
+        marker="o",
+        markersize=MARKER_SIZE,
+        linewidth=LINE_WIDTH,
     )
     (line_hum,) = ax_hum.plot(
-        [], [], color=COLOR_HUM, marker="o", markersize=4, linewidth=1.8
+        [],
+        [],
+        color=COLOR_HUM,
+        marker="o",
+        markersize=MARKER_SIZE,
+        linewidth=LINE_WIDTH,
     )
     (line_dist,) = ax_dist.plot(
-        [], [], color=COLOR_DIST, marker="o", markersize=4, linewidth=1.8
+        [],
+        [],
+        color=COLOR_DIST,
+        marker="o",
+        markersize=MARKER_SIZE,
+        linewidth=LINE_WIDTH,
     )
 
     # Automatically adjust layout to prevent overlap of titles, labels, and ticks.
-    fig.tight_layout()
+    fig.tight_layout(rect=FIG_RECT_LAYOUT)
 
     # Group all axes.
     all_axes = (ax_temp, ax_hum, ax_dist)
@@ -156,7 +220,9 @@ def main() -> None:
 
         for ax in all_axes:
             ax.set_xticks(visible_ticks)
-            ax.set_xticklabels(tick_labels, rotation=0, ha="center", fontsize=8)
+            ax.set_xticklabels(
+                tick_labels, rotation=0, ha="center", fontsize=FONT_SIZE_TICKS
+            )
 
     ax_dist.callbacks.connect("xlim_changed", on_xlims_changed)
 
@@ -278,7 +344,9 @@ def main() -> None:
             # Apply the calculated tick positions and labels to all subplots.
             for ax in all_axes:
                 ax.set_xticks(tick_positions)
-                ax.set_xticklabels(tick_labels, rotation=0, ha="center", fontsize=8)
+                ax.set_xticklabels(
+                    tick_labels, rotation=0, ha="center", fontsize=FONT_SIZE_TICKS
+                )
 
             # Queue redraw, activating when a new row is appended.
             fig.canvas.draw_idle()  # type: ignore
