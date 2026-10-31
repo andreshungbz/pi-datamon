@@ -5,7 +5,7 @@ from luma.core.interface.serial import i2c  # type: ignore
 from luma.oled.device import ssd1306  # type: ignore
 from PIL import Image, ImageDraw, ImageFont
 
-from pi_datamon.app.utils import (
+from pi_datamon.app.icons import (
     draw_droplet_icon,
     draw_sonar_icon,
     draw_thermometer_icon,

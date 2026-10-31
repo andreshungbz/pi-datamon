@@ -7,12 +7,8 @@ from gpiozero import Button  # type: ignore
 from pi_datamon.app.distance import HCSR04
 from pi_datamon.app.oled import SSD1306
 from pi_datamon.app.temp_humid import AHT20
-from pi_datamon.app.utils import (
-    append_csv_row,
-    get_repo_root,
-    init_csv_writer,
-)
 from pi_datamon.common.console import console, print_introduction
+from pi_datamon.common.utils import append_csv_row, get_repo_root, init_csv_writer
 
 # Default I2C Bus
 I2C_BUS_ID = 1
