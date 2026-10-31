@@ -140,7 +140,7 @@ def main() -> None:
         "Temperature Over Time",
         color=COLOR_TEMP,
         fontsize=FONT_SIZE_SUBPLOT_TITLE,
-        loc="center",
+        loc="left",
         fontweight="bold",
         pad=6,
     )
@@ -163,8 +163,9 @@ def main() -> None:
         "Humidity Over Time",
         color=COLOR_HUM,
         fontsize=FONT_SIZE_SUBPLOT_TITLE,
-        loc="center",
+        loc="left",
         fontweight="bold",
+        pad=6,
     )
     ax_hum.set_ylabel(
         "Humidity (%)",
@@ -185,8 +186,9 @@ def main() -> None:
         "Distance Over Time",
         color=COLOR_DIST,
         fontsize=FONT_SIZE_SUBPLOT_TITLE,
-        loc="center",
+        loc="left",
         fontweight="bold",
+        pad=6,
     )
     ax_dist.set_ylabel(
         "Distance (cm)",
