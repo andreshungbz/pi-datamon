@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.markup import escape
 from rich.table import Table
 
-# Shared console instance across app and visualizer.
+# Shared console instance.
 console = Console()
 
 
