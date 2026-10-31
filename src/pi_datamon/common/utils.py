@@ -95,7 +95,7 @@ def make_status_table(
     table.add_column(mode_header, style="bold green", justify="left")
     table.add_column("Timestamp", style="white", justify="center")
     table.add_column("Elapsed (s)", style="cyan", justify="right")
-    table.add_column("Temp (°C)", style="yellow", justify="right")
+    table.add_column("Temperature (°C)", style="yellow", justify="right")
     table.add_column("Humidity (%)", style="blue", justify="right")
     table.add_column("Distance (cm)", style="magenta", justify="right")
 
