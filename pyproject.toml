@@ -21,6 +21,9 @@ dependencies = [
     # Python Imaging Library (PIL) for drawing graphics/text on screen canvas.
     # https://github.com/python-pillow/Pillow
     "pillow>=13.0.0",
+    # Rich text and formatting library for console output.
+    # https://github.com/Textualize/rich
+    "rich>=15.0.0",
     # Low-level I2C/SMBus communication library.
     # https://github.com/kplindegaard/smbus2
     "smbus2>=0.6.1",

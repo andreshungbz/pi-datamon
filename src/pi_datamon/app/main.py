@@ -12,6 +12,7 @@ from pi_datamon.app.utils import (
     get_repo_root,
     init_csv_writer,
 )
+from pi_datamon.common.console import console, print_introduction
 
 # Default I2C Bus
 I2C_BUS_ID = 1
@@ -31,7 +32,8 @@ TIMEZONE = ZoneInfo("America/Belize")
 
 
 def main() -> None:
-    print("Initializing Pi-Datamon hardware...")
+    print_introduction("magenta", "pi-datamon/app")
+    console.print("[bold green]Initializing...[/bold green]")
 
     # Initialize CSV log file.
     init_csv_writer(CSV_FILE_PATH)
@@ -46,40 +48,64 @@ def main() -> None:
     button.when_pressed = oled_display.cycle_mode
 
     start_time = time.time()
-    print(f"Logging metrics to {CSV_FILE_PATH}. Press Ctrl+C to exit.")
+    console.print(
+        f"Logging metrics to [cyan]{CSV_FILE_PATH}[/cyan]. Press [bold red]Ctrl+C[/bold red] to exit.\n"
+    )
     try:
-        # Main Program Loop
-        while True:
-            # Calculate Elapsed_Seconds.
-            cycle_start = time.time()
-            now = datetime.now(TIMEZONE)
-            elapsed_seconds = cycle_start - start_time
+        with console.status(
+            "[bold green]Sampling sensors...[/bold green]", spinner="dots"
+        ) as status:
+            # Main Program Loop
+            while True:
+                # Calculate Elapsed_Seconds.
+                cycle_start = time.time()
+                now = datetime.now(TIMEZONE)
+                elapsed_seconds = cycle_start - start_time
 
-            # Read Distance_cm.
-            dist_cm = ultrasonic_sensor.read_distance_cm()
+                # Read Distance_cm.
+                dist_cm = ultrasonic_sensor.read_distance_cm()
 
-            # Read Temperature_C and Humidity_Percent.
-            try:
-                temp_c, hum_pct = temp_humid_sensor.read_metrics()
-            except OSError as e:
-                print(f"Warning: Failed to read temperature/humidity: {e}")
-                temp_c, hum_pct = float("nan"), float("nan")
+                # Read Temperature_C and Humidity_Percent.
+                try:
+                    temp_c, hum_pct = temp_humid_sensor.read_metrics()
+                except OSError as e:
+                    console.print(
+                        f"[bold yellow]Warning:[/bold yellow] Failed to read temperature/humidity - {e}"
+                    )
+                    temp_c, hum_pct = float("nan"), float("nan")
 
-            # Append a new record to the CSV log file.
-            iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-            append_csv_row(
-                CSV_FILE_PATH, iso_timestamp, elapsed_seconds, temp_c, hum_pct, dist_cm
-            )
+                # Append a new record to the CSV log file.
+                iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+                append_csv_row(
+                    CSV_FILE_PATH,
+                    iso_timestamp,
+                    elapsed_seconds,
+                    temp_c,
+                    hum_pct,
+                    dist_cm,
+                )
 
-            # Render active sensor mode to the OLED display.
-            oled_display.render(temperature=temp_c, humidity=hum_pct, distance=dist_cm)
+                # Render active sensor mode to the OLED display.
+                oled_display.render(
+                    temperature=temp_c, humidity=hum_pct, distance=dist_cm
+                )
 
-            # Sleep for the remainder of the polling interval, accounting for execution time.
-            elapsed_execution = time.time() - cycle_start
-            sleep_duration = max(0.0, POLLING_INTERVAL - elapsed_execution)
-            time.sleep(sleep_duration)
+                # Update live status text with active reading summary.
+                status.update(
+                    f"[bold green]Polling Active[/bold green] | "
+                    f"Timestamp: [dim]{iso_timestamp}[/dim] | "
+                    f"Elapsed_Seconds: [cyan]{elapsed_seconds:.1f}s[/cyan] | "
+                    f"Temperature_C: [yellow]{temp_c:.1f}°C[/yellow] | "
+                    f"Humidity_Percent: [blue]{hum_pct:.1f}%[/blue] | "
+                    f"Distance_cm: [magenta]{dist_cm:.1f}cm[/magenta]"
+                )
+
+                # Sleep for the remainder of the polling interval, accounting for execution time.
+                elapsed_execution = time.time() - cycle_start
+                sleep_duration = max(0.0, POLLING_INTERVAL - elapsed_execution)
+                time.sleep(sleep_duration)
     except KeyboardInterrupt:
-        print("\nStopping sensor collection cleanly...")
+        console.print("\n[bold yellow]Stopping sensor collection...[/bold yellow]")
     finally:
         # Clean up and close hardware interfaces.
         ultrasonic_sensor.close()

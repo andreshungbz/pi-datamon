@@ -14,6 +14,10 @@ run-visualization:
 format:
     @ruff check --select I --fix
 
+# Show program information
+info:
+    @uv run python -c "from pi_datamon.common.console import print_introduction; print_introduction('yellow')"
+
 # Variables
 PI_HOST := "andreshung@cmps4252-pi-4.local"
 PI_LOG_DIR := "/home/andreshung/Projects/pi-datamon/log"
