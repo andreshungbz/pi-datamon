@@ -31,7 +31,7 @@ dependencies = [
 
 [project.scripts]
 pi-datamon-app = "pi_datamon.app.main:main"
-pi-datamon-visualization = "pi_datamon.visualization.main:main"
+pi-datamon-visualizer = "pi_datamon.visualizer.main:main"
 
 [build-system]
 requires = ["uv_build>=0.12.22,<0.13.0"]

@@ -6,9 +6,9 @@ default:
 run-app:
     @uv run pi-datamon-app
 
-# Run Pi Datamon Visualization
-run-visualization:
-    @uv run pi-datamon-visualization
+# Run Pi Datamon Visualizer
+run-visualizer:
+    @uv run pi-datamon-visualizer
 
 # Format code with ruff
 format:
