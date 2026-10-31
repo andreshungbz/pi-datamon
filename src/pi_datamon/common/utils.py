@@ -81,7 +81,7 @@ def make_status_table(
     mode_header.add_column(justify="left")
     mode_header.add_column(justify="left")
     mode_header.add_row(
-        Spinner("dots", style="bold green"),
+        Spinner("dots", style="bold yellow"),
         Text("Mode", style="white"),
     )
 
@@ -92,12 +92,12 @@ def make_status_table(
         padding=(0, 1, 0, 1),
         show_header=True,
     )
-    table.add_column(mode_header, style="bold green", justify="left")
+    table.add_column(mode_header, style="bold yellow", justify="left")
     table.add_column("Timestamp", style="white", justify="center")
-    table.add_column("Elapsed (s)", style="cyan", justify="right")
-    table.add_column("Temperature (°C)", style="yellow", justify="right")
-    table.add_column("Humidity (%)", style="blue", justify="right")
-    table.add_column("Distance (cm)", style="magenta", justify="right")
+    table.add_column("Elapsed (s)", style="white", justify="right")
+    table.add_column("Temperature (°C)", style="blue", justify="right")
+    table.add_column("Humidity (%)", style="green", justify="right")
+    table.add_column("Distance (cm)", style="red", justify="right")
 
     # Add row.
     table.add_row(
