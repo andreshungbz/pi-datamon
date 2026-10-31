@@ -31,3 +31,4 @@ def print_introduction(
     table.add_row(escape("GitHub"), repo_url)
 
     console.print(table)
+    console.print()
