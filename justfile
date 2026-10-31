@@ -21,7 +21,7 @@ simulate:
 
 # Truncate the log file
 cleanup:
-    > {{ LOCAL_LOG_DIR }}/sensor_log.csv
+    rm -rf log/
 
 # Format code with ruff
 format:
