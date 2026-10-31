@@ -11,12 +11,7 @@ def get_repo_root() -> Path:
     return Path.cwd()
 
 
-# Standard CSV File Path Configuration
-LOG_DIR = get_repo_root() / "log"
-CSV_FILE_PATH = LOG_DIR / "sensor_log.csv"
-
-
-def init_csv_writer(file_path: Path = CSV_FILE_PATH) -> None:
+def init_csv_writer(file_path: Path) -> None:
     """Ensure output directory and CSV headers exist."""
     file_path.parent.mkdir(parents=True, exist_ok=True)
     if not file_path.exists():
