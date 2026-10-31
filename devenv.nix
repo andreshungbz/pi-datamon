@@ -11,7 +11,6 @@
       git
       just
       just-lsp
-      python314Packages.tkinter
       ruff
     ]
     ++ lib.optionals (stdenv.hostPlatform.isLinux) [
@@ -21,6 +20,9 @@
       # Low-level C and Python libraries for manipulating GPIO.
       # https://github.com/joan2937/lg
       python314Packages.lgpio
+      # GUI toolkit for Python, used for the visualizer.
+      # https://docs.python.org/3/library/tkinter.html
+      python314Packages.tkinter
     ];
 
   # https://devenv.sh/languages/
