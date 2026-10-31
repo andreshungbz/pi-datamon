@@ -8,7 +8,7 @@ default:
     @just --list --unsorted
 
 # Run Pi Datamon App
-sense:
+run:
     @uv run pi-datamon-app
 
 # Run Pi Datamon Visualizer
