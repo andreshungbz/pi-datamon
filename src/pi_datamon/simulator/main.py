@@ -78,17 +78,6 @@ def main() -> None:
                     1,
                 )
 
-                # Append a new record to the CSV log file.
-                iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-                append_csv_row(
-                    CSV_FILE_PATH,
-                    iso_timestamp,
-                    elapsed_seconds,
-                    temp,
-                    hum,
-                    dist,
-                )
-
                 # Refresh the terminal display.
                 live.update(
                     make_status_table(
@@ -99,6 +88,17 @@ def main() -> None:
                         dist,
                         mode="Simulator",
                     )
+                )
+
+                # Append a new record to the CSV log file.
+                iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+                append_csv_row(
+                    CSV_FILE_PATH,
+                    iso_timestamp,
+                    elapsed_seconds,
+                    temp,
+                    hum,
+                    dist,
                 )
 
                 # Sleep for the remainder of the polling interval, accounting for execution time.

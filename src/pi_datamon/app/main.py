@@ -86,22 +86,6 @@ def main() -> None:
                     )
                     temp_c, hum_pct = float("nan"), float("nan")
 
-                # Append a new record to the CSV log file.
-                iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-                append_csv_row(
-                    CSV_FILE_PATH,
-                    iso_timestamp,
-                    elapsed_seconds,
-                    temp_c,
-                    hum_pct,
-                    dist_cm,
-                )
-
-                # Render active sensor mode to the OLED display.
-                oled_display.render(
-                    temperature=temp_c, humidity=hum_pct, distance=dist_cm
-                )
-
                 # Refresh the terminal display.
                 live.update(
                     make_status_table(
@@ -112,6 +96,22 @@ def main() -> None:
                         dist_cm,
                         mode=oled_display.mode,
                     )
+                )
+
+                # Render active sensor mode to the OLED display.
+                oled_display.render(
+                    temperature=temp_c, humidity=hum_pct, distance=dist_cm
+                )
+
+                # Append a new record to the CSV log file.
+                iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+                append_csv_row(
+                    CSV_FILE_PATH,
+                    iso_timestamp,
+                    elapsed_seconds,
+                    temp_c,
+                    hum_pct,
+                    dist_cm,
                 )
 
                 # Sleep for the remainder of the polling interval, accounting for execution time.
