@@ -2,7 +2,7 @@ import time
 
 import smbus2  # type: ignore
 
-# Sensor Address
+# I2C Address
 AHT20_I2C_ADDR = 0x38
 
 
@@ -14,6 +14,7 @@ class AHT20:
     def __init__(self, bus_id: int, address: int = AHT20_I2C_ADDR):
         self.bus_id = bus_id
         self.address = address
+        # Initialize the I2C bus connection using smbus2.
         self.bus = smbus2.SMBus(self.bus_id)
         time.sleep(0.1)
         self._initialize_sensor()
