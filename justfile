@@ -34,6 +34,8 @@ mount:
         -o reconnect \
         -o ServerAliveInterval=15 \
         -o ServerAliveCountMax=3 \
+        -o cache=no \
+        -o cache_timeout=1 \
         -o defer_permissions
 
 # Emergency cleanup if a mount hangs or isn't cleared by Ctrl+C
