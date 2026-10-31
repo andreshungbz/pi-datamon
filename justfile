@@ -8,15 +8,15 @@ default:
     @just --list --unsorted
 
 # Run Pi Datamon App
-run-app:
+sense:
     @uv run pi-datamon-app
 
 # Run Pi Datamon Visualizer
-run-visualizer:
+visualize:
     @uv run pi-datamon-visualizer
 
 # Run Pi Datamon Simulator
-run-simulator:
+simulate:
     @uv run pi-datamon-simulator
 
 # Truncate the log file
