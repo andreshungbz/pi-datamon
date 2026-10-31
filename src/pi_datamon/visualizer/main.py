@@ -1,5 +1,7 @@
+import logging
 import os
 import platform
+import warnings
 
 import matplotlib
 
@@ -8,6 +10,12 @@ if platform.system() == "Darwin":
     matplotlib.use("MacOSX")
 else:
     matplotlib.use("TkAgg")
+
+# Suppress Matplotlib font fallback warnings and log noise.
+logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
+warnings.filterwarnings(
+    "ignore", category=UserWarning, module="matplotlib.font_manager"
+)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,7 +35,12 @@ POLL_INTERVAL_MS = 500
 WINDOW_TITLE = "Pi Datamon Visualizer"
 
 # Font Configuration
-FONT_FAMILY = "DejaVu Sans"
+FONT_FAMILY = (
+    "JetBrainsMono NF",
+    "JetBrainsMono Nerd Font",
+    "DejaVu Sans",
+    "sans-serif",
+)
 
 # Color Palette Configuration
 BG_COLOR = "#ffffff"
