@@ -11,6 +11,7 @@
       git
       just
       just-lsp
+      python314Packages.tkinter
       ruff
     ]
     ++ lib.optionals (stdenv.hostPlatform.isLinux) [
