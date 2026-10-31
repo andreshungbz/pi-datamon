@@ -37,9 +37,9 @@ def main() -> None:
     init_csv_writer(CSV_FILE_PATH)
 
     # Instantiate hardware interfaces for display and sensors.
+    ultrasonic_sensor = HCSR04(trigger_pin=TRIG_PIN, echo_pin=ECHO_PIN)
     oled_display = SSD1306(bus_id=I2C_BUS_ID)
     temp_humid_sensor = AHT20(bus_id=I2C_BUS_ID)
-    ultrasonic_sensor = HCSR04(trigger_pin=TRIG_PIN, echo_pin=ECHO_PIN)
 
     # Configure mode-cycling button.
     button = Button(BUTTON_PIN, pull_up=True, bounce_time=0.05)
@@ -55,15 +55,15 @@ def main() -> None:
             now = datetime.now(TIMEZONE)
             elapsed_seconds = cycle_start - start_time
 
+            # Read Distance_cm.
+            dist_cm = ultrasonic_sensor.read_distance_cm()
+
             # Read Temperature_C and Humidity_Percent.
             try:
                 temp_c, hum_pct = temp_humid_sensor.read_metrics()
             except OSError as e:
                 print(f"Warning: Failed to read temperature/humidity: {e}")
                 temp_c, hum_pct = float("nan"), float("nan")
-
-            # Read Distance_cm.
-            dist_cm = ultrasonic_sensor.read_distance_cm()
 
             # Append a new record to the CSV log file.
             iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -82,9 +82,9 @@ def main() -> None:
         print("\nStopping sensor collection cleanly...")
     finally:
         # Clean up and close hardware interfaces.
+        ultrasonic_sensor.close()
         oled_display.device.cleanup()
         temp_humid_sensor.close()
-        ultrasonic_sensor.close()
 
 
 if __name__ == "__main__":
