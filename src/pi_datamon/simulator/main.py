@@ -106,7 +106,7 @@ def main() -> None:
                 sleep_duration = max(0.0, POLLING_INTERVAL - elapsed_execution)
                 time.sleep(sleep_duration)
     except KeyboardInterrupt:
-        console.print("[bold yellow]Stopping simulator...[/bold yellow]")
+        console.print("[bold yellow]Simulator stopped.[/bold yellow]")
 
 
 if __name__ == "__main__":

@@ -119,7 +119,7 @@ def main() -> None:
                 sleep_duration = max(0.0, POLLING_INTERVAL - elapsed_execution)
                 time.sleep(sleep_duration)
     except KeyboardInterrupt:
-        console.print("[bold yellow]Stopping sensor collection...[/bold yellow]")
+        console.print("[bold yellow]Sensor collection stopped.[/bold yellow]")
     finally:
         # Clean up and close hardware interfaces.
         ultrasonic_sensor.close()
