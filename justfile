@@ -12,7 +12,7 @@ run-visualization:
 
 # Format code with ruff
 format:
-    @ruff check --fix
+    @ruff check --select I --fix
 
 # Variables
 PI_HOST := "andreshung@cmps4252-pi-4.local"
