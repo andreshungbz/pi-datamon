@@ -5,10 +5,13 @@ from luma.core.interface.serial import i2c  # type: ignore
 from luma.oled.device import ssd1306  # type: ignore
 from PIL import Image, ImageDraw, ImageFont
 
-# Default I2C Bus and Monochrome OLED Address Configuration
-# Note: PCB silkscreens often list 0x78 (the 8-bit shifted I2C write address).
-# Linux kernel I2C drivers use standard 7-bit addressing: 0x78 >> 1 = 0x3C.
-I2C_BUS_ID = 1
+from pi_datamon.app.utils import (
+    draw_droplet_icon,
+    draw_sonar_icon,
+    draw_thermometer_icon,
+)
+
+# I2C Address
 SSD1306_I2C_ADDR = 0x3C
 
 
@@ -17,21 +20,27 @@ class SSD1306:
 
     # Datasheet: https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 
-    def __init__(self, bus_id: int = I2C_BUS_ID, address: int = SSD1306_I2C_ADDR):
+    def __init__(self, bus_id: int, address: int = SSD1306_I2C_ADDR):
         # Initialize luma.core I2C serial transport wrapper.
         serial_interface = i2c(port=bus_id, address=address)
-        # Initialize SSD1306 display controller.
         self.device = ssd1306(serial_interface)
-        # Retrieve display canvas dimensions (128 pixels wide x 64 pixels high).
         self.size: tuple[int, int] = cast(
             tuple[int, int],
+            # Retrieve display canvas dimensions (128 pixels wide x 64 pixels high).
             self.device.size,  # type: ignore
         )
-        # Active menu mode index (0: Temperature, 1: Humidity, 2: Distance).
-        self.mode = 0
-        # Load default bitmap fonts for header titles and numerical metrics.
         self.font_title = ImageFont.load_default()
         self.font_data = ImageFont.load_default()
+        self.mode = 0
+
+        # Pre-calculated geometry layout constants.
+        self.margin_x = 4
+        self.margin_y = 4
+        self.icon_size = 16
+        self.text_x = self.margin_x + self.icon_size + 6  # X = 26
+        self.separator_y = self.margin_y + 13  # Y = 17
+        self.label_y = self.separator_y + 4  # Y = 21
+        self.value_y = self.label_y + 14  # Y = 35
 
     def cycle_mode(self) -> None:
         """Cycle through display pages sequentially in a loop (0 -> 1 -> 2 -> 0)."""
@@ -39,36 +48,46 @@ class SSD1306:
 
     def render(self, temperature: float, humidity: float, distance: float) -> None:
         """Draw active page layout to PIL image buffer and push to SSD1306 GDDRAM."""
-        # Create a blank 1-bit monochrome image buffer in RAM (Mode '1': 0=Black, 255=White).
-        # Dimensions: 128x64 pixels (1,024 bytes total memory footprint)
+        # Create a blank 1-bit monochrome image buffer in RAM (Mode '1': 0 = Black, 255 = White).
         image = Image.new("1", self.size, 0)
         draw = ImageDraw.Draw(image)
 
+        # Draw icon and set variables for the current display mode (0 = Temperature, 1 = Humidity, 2 = Distance).
         if self.mode == 0:
-            # Page 0: Temperature View
-            draw.text((0, 0), "TEMP MONITOR", font=self.font_title, fill=255)
-            draw.line((0, 12, 128, 12), fill=255)  # Separator line at Y=12
-            draw.text(
-                (0, 24),
-                f"Temperature: {temperature:.1f} C",
-                font=self.font_data,
-                fill=255,
-            )
+            draw_thermometer_icon(draw, x=self.margin_x, y=self.margin_y)
+            title = "TEMP MONITOR"
+            label = "Temperature:"
+            value = f"{temperature:.1f} °C"
         elif self.mode == 1:
-            # Page 1: Relative Humidity View
-            draw.text((0, 0), "HUMIDITY", font=self.font_title, fill=255)
-            draw.line((0, 12, 128, 12), fill=255)  # Separator line at Y=12
-            draw.text(
-                (0, 24), f"Relative: {humidity:.1f} %", font=self.font_data, fill=255
-            )
-        elif self.mode == 2:
-            # Page 2: Ultrasonic Distance View
-            draw.text((0, 0), "DISTANCE", font=self.font_title, fill=255)
-            draw.line((0, 12, 128, 12), fill=255)  # Separator line at Y=12
-            dist_str = (
-                f"{distance:.1f} cm" if not math.isnan(distance) else "Out of Range"
-            )
-            draw.text((0, 24), f"Object: {dist_str}", font=self.font_data, fill=255)
+            draw_droplet_icon(draw, x=self.margin_x, y=self.margin_y)
+            title = "HUMIDITY"
+            label = "Relative:"
+            value = f"{humidity:.1f} %"
+        else:
+            draw_sonar_icon(draw, x=self.margin_x, y=self.margin_y)
+            title = "DISTANCE"
+            label = "Object Distance:"
+            value = f"{distance:.1f} cm" if not math.isnan(distance) else "N/A"
 
-        # Write 1-bit canvas buffer over I2C to Graphic Display Data RAM (GDDRAM)
+        # Draw mode title.
+        draw.text((self.text_x, self.margin_y), title, font=self.font_title, fill=255)
+
+        # Draw horizontal separator line.
+        draw.line(
+            (
+                self.text_x,
+                self.separator_y,
+                self.size[0] - self.margin_x,
+                self.separator_y,
+            ),
+            fill=255,
+        )
+
+        # Draw metric label.
+        draw.text((self.text_x, self.label_y), label, font=self.font_data, fill=255)
+
+        # Draw measured value.
+        draw.text((self.text_x, self.value_y), value, font=self.font_data, fill=255)
+
+        # Write 1-bit canvas buffer to OLED display.
         self.device.display(image)  # type: ignore
