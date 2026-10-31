@@ -1,3 +1,4 @@
+import math
 import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -28,8 +29,11 @@ TIMEZONE = ZoneInfo("America/Belize")
 
 
 def main() -> None:
-    print_introduction("magenta", "pi-datamon/app")
-    console.print("[bold green]Initializing...[/bold green]")
+    print_introduction(
+        "magenta",
+        "pi-datamon/app",
+        "Data acquisition and monitoring system for temperature, humidity, and distance using a Raspberry Pi",
+    )
 
     # Initialize CSV log file.
     init_csv_writer(CSV_FILE_PATH)
@@ -47,6 +51,7 @@ def main() -> None:
     console.print(
         f"Logging metrics to [cyan]{CSV_FILE_PATH}[/cyan]. Press [bold red]Ctrl+C[/bold red] to exit.\n"
     )
+
     try:
         with console.status(
             "[bold green]Sampling sensors...[/bold green]", spinner="dots"
@@ -56,7 +61,7 @@ def main() -> None:
                 # Calculate Elapsed_Seconds.
                 cycle_start = time.time()
                 now = datetime.now(TIMEZONE)
-                elapsed_seconds = cycle_start - start_time
+                elapsed_seconds = math.floor(cycle_start - start_time)
 
                 # Read Distance_cm.
                 dist_cm = ultrasonic_sensor.read_distance_cm()

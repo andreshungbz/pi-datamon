@@ -1,3 +1,8 @@
+# Variables
+PI_HOST := "andreshung@cmps4252-pi-4.local"
+PI_LOG_DIR := "/home/andreshung/Projects/pi-datamon/log"
+LOCAL_LOG_DIR := invocation_directory() + "/log"
+
 # Print recipe list
 default:
     @just --list --unsorted
@@ -10,6 +15,14 @@ run-app:
 run-visualizer:
     @uv run pi-datamon-visualizer
 
+# Run Pi Datamon Simulator
+run-simulator:
+    @uv run pi-datamon-simulator
+
+# Truncate the log file
+cleanup:
+    > {{ LOCAL_LOG_DIR }}/sensor_log.csv
+
 # Format code with ruff
 format:
     @ruff check --select I --fix
@@ -17,11 +30,6 @@ format:
 # Show program information
 info:
     @uv run python -c "from pi_datamon.common.console import print_introduction; print_introduction('yellow')"
-
-# Variables
-PI_HOST := "andreshung@cmps4252-pi-4.local"
-PI_LOG_DIR := "/home/andreshung/Projects/pi-datamon/log"
-LOCAL_LOG_DIR := invocation_directory() + "/log"
 
 # Mount the remote Pi log directory into local ./log (press Ctrl+C to unmount)
 mount:
