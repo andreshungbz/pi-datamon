@@ -93,6 +93,10 @@ def main() -> None:
         sharex=True,
     )
 
+    # Set native window title bar text.
+    if fig.canvas.manager:
+        fig.canvas.manager.set_window_title("Pi Datamon Visualizer")
+
     # Set main title.
     fig.suptitle(  # type: ignore
         "Pi Datamon Real-Time Log Visualization",
