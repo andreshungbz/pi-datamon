@@ -24,6 +24,10 @@ CSV_FILE_PATH = LOG_DIR / "sensor_log.csv"
 # Visualizer Configuration
 VIEW_WINDOW_WIDTH = 30
 POLL_INTERVAL_MS = 500
+WINDOW_TITLE = "Pi Datamon Visualizer"
+
+# Font Configuration
+FONT_FAMILY = "DejaVu Sans"
 
 # Color Palette Configuration
 BG_COLOR = "#ffffff"
@@ -83,8 +87,11 @@ def main() -> None:
             _start_row_index = 0
             _last_row_count = 0
 
-    # Instantiate Matplotlib figure and subplots for temperature, humidity, and distance.
+    # Configure default Matplotlib style and font family.
     plt.style.use("default")
+    plt.rcParams["font.family"] = FONT_FAMILY
+
+    # Instantiate Matplotlib figure and subplots for temperature, humidity, and distance.
     fig, (ax_temp, ax_hum, ax_dist) = plt.subplots(
         # Stack 3 subplots vertically, sharing the X-axis for elapsed time.
         nrows=3,
@@ -93,9 +100,9 @@ def main() -> None:
         sharex=True,
     )
 
-    # Set native window title bar text.
+    # Set OS window title bar text.
     if fig.canvas.manager:
-        fig.canvas.manager.set_window_title("Pi Datamon Visualizer")
+        fig.canvas.manager.set_window_title(WINDOW_TITLE)
 
     # Set main title.
     fig.suptitle(  # type: ignore
