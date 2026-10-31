@@ -59,7 +59,7 @@ class AHT20:
         # Temperature T (°C)       = ((S_t / 2^20) * 200) - 50
         humidity = (raw_humidity / 1048576.0) * 100.0
         temperature = ((raw_temp / 1048576.0) * 200.0) - 50.0
-        return round(temperature, 2), round(humidity, 2)
+        return round(temperature, 1), round(humidity, 1)
 
     def close(self) -> None:
         """Close the I2C bus connection gracefully."""

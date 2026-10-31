@@ -35,7 +35,7 @@ class HCSR04:
             raw_val: object = self.sensor.distance  # type: ignore
             if raw_val is not None:
                 distance_meters = cast(float, raw_val)
-                return round(distance_meters * 100.0, 2)
+                return round(distance_meters * 100.0, 1)
             return float("nan")
         except OSError, DistanceSensorNoEcho, GPIOZeroError:
             return float("nan")
