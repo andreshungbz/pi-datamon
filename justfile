@@ -3,7 +3,7 @@ default:
     @just --list --unsorted
 
 # Run Pi Datamon App
-run-sensors:
+run-app:
     @uv run pi-datamon-app
 
 # Run Pi Datamon Visualization
