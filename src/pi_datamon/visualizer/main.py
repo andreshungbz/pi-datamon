@@ -43,10 +43,11 @@ FONT_FAMILY = (
 )
 
 # Color Palette Configuration
-BG_COLOR = "#ffffff"
-TEXT_COLOR_DARK = "#111111"
-TICK_COLOR = "#333333"
-GRID_COLOR = "#bbbbbb"
+BG_COLOR = "#f4f5f7"
+SUBPLOT_BG_COLOR = "#ffffff"
+TEXT_COLOR_DARK = "#000000"
+TICK_COLOR = "#000000"
+GRID_COLOR = "#a0a3a8"
 COLOR_TEMP = "#1f77b4"
 COLOR_HUM = "#2ca02c"
 COLOR_DIST = "#d62728"
@@ -119,7 +120,7 @@ def main() -> None:
 
     # Set main title.
     fig.suptitle(  # type: ignore
-        "Pi Datamon Real-Time Log Visualization",
+        "Pi Datamon Log Visualizer",
         fontsize=FONT_SIZE_MAIN_TITLE,
         fontweight="bold",
         color=TEXT_COLOR_DARK,
@@ -129,7 +130,7 @@ def main() -> None:
     # Set canvas and subplot background colors.
     fig.patch.set_facecolor(BG_COLOR)
     for ax in (ax_temp, ax_hum, ax_dist):
-        ax.set_facecolor(BG_COLOR)
+        ax.set_facecolor(SUBPLOT_BG_COLOR)
 
     # Enable X-axis tick labels for all subplots despite shared X-axis.
     for ax in (ax_temp, ax_hum, ax_dist):
@@ -391,9 +392,7 @@ def main() -> None:
             # e.g., permission issues, missing columns, malformed CSV data.
             pass
 
-    console.print(
-        f"Visualizing [cyan]{CSV_FILE_PATH}[/cyan]. Press [bold red]Ctrl+C[/bold red] or close the window to exit."
-    )
+    console.print(f"Visualizing [cyan]{CSV_FILE_PATH}[/cyan].")
 
     # Attach the update function to the Matplotlib animation loop.
     _ani = animation.FuncAnimation(
