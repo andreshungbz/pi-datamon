@@ -54,7 +54,7 @@ cleanup:
 mount:
     @mkdir -p {{ LOCAL_LOG_DIR }}
     @ssh {{ PI_HOST }} "mkdir -p {{ PI_LOG_DIR }}"
-    @echo "Mounting {{ PI_HOST }}:{{ PI_LOG_DIR }} to {{ LOCAL_LOG_DIR }}"
+    @echo "Mounting {{ PI_HOST }}:{{ PI_LOG_DIR }}"
     @sshfs {{ PI_HOST }}:{{ PI_LOG_DIR }} {{ LOCAL_LOG_DIR }} \
         -f \
         -o reconnect \
