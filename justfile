@@ -42,9 +42,9 @@ simulate:
 check:
     @ruff check --select I --fix
 
-# Clear log directory and file.
+# Clear contents of the log directory.
 cleanup:
-    rm -rf log/
+    rm log/*
 
 # ==================================================================================== #
 # FILESYSTEM
