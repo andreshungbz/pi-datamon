@@ -30,7 +30,7 @@ LOG_DIR = get_repo_root() / "log"
 CSV_FILE_PATH = LOG_DIR / "sensor_log.csv"
 
 # Visualizer Configuration
-VIEW_WINDOW_WIDTH = 30
+VIEW_WINDOW_WIDTH = 60
 POLL_INTERVAL_MS = 500
 WINDOW_TITLE = "Pi Datamon Visualizer"
 
