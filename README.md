@@ -27,19 +27,19 @@ Project dependencies are defined in both the `devenv.nix` development environmen
 
 The Raspberry Pi needs to be configured to enable I2C for the AHT20 sensor and the SSD1306 display.
 
-1. On Raspberry Pi OS, configure I2C then reboot.
+1. On Raspberry Pi OS, configure I2C, then reboot.
 
 ```
 sudo raspi-config
 ```
 
-2. Optionally increase performance of I2C by adding the following to `/boot/firmware/config.txt`. Reboot afterwards.
+2. Optionally increase the performance of I2C by adding the following to `/boot/firmware/config.txt`. Reboot afterwards.
 
 ```
 dtparam=i2c_arm=on,i2c_baudrate=400000
 ```
 
-3. Add your user to the `i2c` group then log out and back in. This is for accessing `i2c-tools`.
+3. Add your user to the `i2c` group, then log out and back in. This is for accessing `i2c-tools`.
 
 ```
 sudo usermod -a -G i2c $USER
@@ -53,7 +53,7 @@ i2cdetect -y 1
 
 ### Recording/Simulating Sensor Data
 
-On the Raspberry Pi, the following command starts the main application for recording data from the sensors and displaying it on the OLED display. Press the tactile button to cycle between the three modes for each sensor: temperature, humidity, and distance. Logs are written to `log/sensor_log.csv`.
+On the Raspberry Pi, the following command starts the main application that records sensor data and displays it on the OLED. Press the tactile button to cycle between the three modes for each sensor: temperature, humidity, and distance. Logs are written to `log/sensor_log.csv`.
 
 ```
 just run
@@ -67,7 +67,7 @@ just simulate
 
 ### Visualizing Sensor Data
 
-Visualization is performed outside of the Raspberry Pi. The `log/sensor_log.csv` can be extracted from the Raspberry Pi for non-live analysis, but for live visualization, this implementation relies on remotely mounting the log directory on the Raspberry Pi. [sshfs](https://github.com/libfuse/sshfs) is used (MacOS additionally requires [macfuse](https://github.com/macfuse/macfuse) and enabling system extensions).
+Visualization is performed outside of the Raspberry Pi. The `log/sensor_log.csv` file can be extracted from the Raspberry Pi for non-live analysis, but for live visualization, this implementation relies on mounting the Raspberry Pi's log directory remotely. [sshfs](https://github.com/libfuse/sshfs) is used (MacOS additionally requires [macfuse](https://github.com/macfuse/macfuse) and enabling system extensions).
 
 Run the following command to mount the log directory with `sshfs`:
 
