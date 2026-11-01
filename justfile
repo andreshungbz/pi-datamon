@@ -1,40 +1,58 @@
-# Variables
+# ==================================================================================== #
+# VARIABLES
+# ==================================================================================== #
+
 PI_HOST := "andreshung@cmps4252-pi-4.local"
 PI_LOG_DIR := "/home/andreshung/Projects/pi-datamon/log"
 LOCAL_LOG_DIR := invocation_directory() + "/log"
 
-# Print recipe list
+# ==================================================================================== #
+# GENERAL
+# ==================================================================================== #
+
+# Show recipe list.
 default:
     @just --list --unsorted
 
-# Run Pi Datamon App
-run:
-    @uv run pi-datamon-app
-
-# Run Pi Datamon Visualizer
-visualize:
-    @uv run pi-datamon-visualizer
-
-# Run Pi Datamon Simulator
-simulate:
-    @uv run pi-datamon-simulator
-
-# Truncate the log file
-cleanup:
-    rm -rf log/
-
-# Format code with ruff
-format:
-    @ruff check --select I --fix
-
-# Show program information
+# Show project information.
 info:
     @uv run python -c "from pi_datamon.common.console import print_introduction; print_introduction('yellow')"
 
-# Mount the remote Pi log directory into local ./log (press Ctrl+C to unmount)
+# ==================================================================================== #
+# PROGRAM
+# ==================================================================================== #
+
+# Run Pi Datamon (should be run on the Pi).
+run:
+    @uv run pi-datamon-app
+
+# Run Pi Datamon Visualizer (should be run on the local machine).
+visualize:
+    @uv run pi-datamon-visualizer
+
+# Run Pi Datamon Simulator.
+simulate:
+    @uv run pi-datamon-simulator
+
+# ==================================================================================== #
+# DEVELOPMENT
+# ==================================================================================== #
+
+# Check and fix code with ruff.
+check:
+    @ruff check --select I --fix
+
+# Clear log directory and file.
+cleanup:
+    rm -rf log/
+
+# ==================================================================================== #
+# FILESYSTEM
+# ==================================================================================== #
+
+# Mount the Pi's log directory from remote.
 mount:
     @mkdir -p {{ LOCAL_LOG_DIR }}
-    @echo "Ensuring remote log directory exists on Pi..."
     @ssh {{ PI_HOST }} "mkdir -p {{ PI_LOG_DIR }}"
     @echo "Mounting {{ PI_HOST }}:{{ PI_LOG_DIR }} to {{ LOCAL_LOG_DIR }}"
     @sshfs {{ PI_HOST }}:{{ PI_LOG_DIR }} {{ LOCAL_LOG_DIR }} \
@@ -46,8 +64,6 @@ mount:
         -o cache_timeout=1 \
         -o defer_permissions
 
-# Emergency cleanup if a mount hangs or isn't cleared by Ctrl+C
-unmount:
-    @echo "Cleaning up local mount point {{ LOCAL_LOG_DIR }}..."
-    @diskutil unmount force {{ LOCAL_LOG_DIR }} 2>/dev/null || umount -f {{ LOCAL_LOG_DIR }} 2>/dev/null || true
-    @echo "Unmounted."
+# Emergency mount cleanup (MacOS).
+unmount-macos:
+    diskutil unmount force {{ LOCAL_LOG_DIR }} 2>/dev/null || umount -f {{ LOCAL_LOG_DIR }} 2>/dev/null || true
