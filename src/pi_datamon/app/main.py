@@ -8,6 +8,7 @@ from rich.live import Live
 
 from pi_datamon.app.distance import HCSR04
 from pi_datamon.app.oled import SSD1306
+from pi_datamon.app.temp_humid import AHT20
 from pi_datamon.common.console import console, print_introduction
 from pi_datamon.common.utils import (
     append_csv_row,
@@ -31,8 +32,6 @@ CSV_FILE_PATH = LOG_DIR / "sensor_log.csv"
 # Program Configuration
 POLLING_INTERVAL = 1.0
 TIMEZONE = ZoneInfo("America/Belize")
-DUMMY_TEMPERATURE_C = 25.0
-DUMMY_HUMIDITY_PCT = 60.0
 
 
 def main() -> None:
@@ -48,6 +47,7 @@ def main() -> None:
     # Instantiate hardware interfaces for display and sensors.
     ultrasonic_sensor = HCSR04(trigger_pin=TRIG_PIN, echo_pin=ECHO_PIN)
     oled_display = SSD1306(bus_id=I2C_BUS_ID)
+    temp_humid_sensor = AHT20(bus_id=I2C_BUS_ID)
 
     # Configure mode-cycling button.
     button = Button(BUTTON_PIN, pull_up=True, bounce_time=0.05)
@@ -77,9 +77,14 @@ def main() -> None:
                 # Read Distance_cm.
                 dist_cm = ultrasonic_sensor.read_distance_cm()
 
-                # Use fixed values while the temperature/humidity sensor is disconnected.
-                temp_c = DUMMY_TEMPERATURE_C
-                hum_pct = DUMMY_HUMIDITY_PCT
+                # Read Temperature_C and Humidity_Percent.
+                try:
+                    temp_c, hum_pct = temp_humid_sensor.read_metrics()
+                except OSError as error:
+                    console.print(
+                        f"[bold yellow]Warning:[/bold yellow] Failed to read temperature/humidity - {error}"
+                    )
+                    temp_c, hum_pct = float("nan"), float("nan")
 
                 # Refresh the terminal display.
                 live.update(
@@ -119,6 +124,7 @@ def main() -> None:
         # Clean up and close hardware interfaces.
         ultrasonic_sensor.close()
         oled_display.device.cleanup()
+        temp_humid_sensor.close()
 
 
 if __name__ == "__main__":
