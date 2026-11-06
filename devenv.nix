@@ -17,6 +17,8 @@
       # Utility for I2C devices.
       # https://archive.kernel.org/oldwiki/i2c.wiki.kernel.org/index.php/I2C_Tools.html
       i2c-tools
+      # Daemon for accurate GPIO timing with gpiozero.
+      pigpio
       # Low-level C and Python libraries for manipulating GPIO.
       # https://github.com/joan2937/lg
       python314Packages.lgpio
@@ -42,6 +44,15 @@
   scripts.version.exec = ''
     python3 --version
     uv --version
+  '';
+
+  scripts.pigpiod-start.exec = ''
+    if pgrep -x pigpiod >/dev/null; then
+      echo "pigpiod is already running"
+    else
+      sudo pigpiod
+      echo "pigpiod started"
+    fi
   '';
 
   # https://devenv.sh/basics/
