@@ -58,5 +58,6 @@
   # https://devenv.sh/basics/
   enterShell = ''
     version
+    pigpiod-start
   '';
 }
