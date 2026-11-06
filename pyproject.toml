@@ -12,6 +12,8 @@ dependencies = [
     # High-level library for interacting with GPIO on Raspberry Pi.
     # https://github.com/gpiozero/gpiozero
     "gpiozero>=2.0.1.post3",
+    # GPIO daemon client used for accurate ultrasonic timing.
+    "pigpio>=1.78",
     # Driver for OLED matrix displays.
     # https://github.com/rm-hull/luma.oled
     "luma-oled>=3.16.0",

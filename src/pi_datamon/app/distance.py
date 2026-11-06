@@ -2,6 +2,7 @@ from typing import cast
 
 from gpiozero import DistanceSensor  # type: ignore
 from gpiozero.exc import DistanceSensorNoEcho, GPIOZeroError  # type: ignore
+from gpiozero.pins.pigpio import PiGPIOFactory  # type: ignore
 
 # Ultrasonic Sensor Configuration
 MAX_DISTANCE = 4
@@ -21,12 +22,14 @@ class HCSR04:
         self.trigger_pin = trigger_pin
         self.echo_pin = echo_pin
         self.max_distance = max_distance
+        self.pin_factory = PiGPIOFactory()
 
         # Initialize the underlying gpiozero DistanceSensor.
         self.sensor = DistanceSensor(
             echo=self.echo_pin,
             trigger=self.trigger_pin,
             max_distance=self.max_distance,
+            pin_factory=self.pin_factory,
         )
 
     def read_distance_cm(self) -> float:
@@ -43,3 +46,4 @@ class HCSR04:
     def close(self) -> None:
         """Release underlying GPIO pins."""
         self.sensor.close()
+        self.pin_factory.close()
