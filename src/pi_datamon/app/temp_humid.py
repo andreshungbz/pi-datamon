@@ -21,8 +21,8 @@ class AHT20:
 
     def _initialize_sensor(self) -> None:
         """Sends the initialization command (0xBE) if necessary."""
-        # Read the 1-byte status register to check the calibration bit (Bit 3).
-        status = self.bus.read_byte(self.address)
+        # Read the status byte using the AHT20 status command (0x71).
+        status = self.bus.read_byte_data(self.address, 0x71)
         if not (status & 0x08):  # 00001000
             # Send the 0xBE Initialization/Calibrate command with data parameters [0x08, 0x00].
             # This loads factory calibration coefficients into RAM.
