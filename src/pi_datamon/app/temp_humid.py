@@ -22,25 +22,32 @@ class AHT20:
     def _initialize_sensor(self) -> None:
         """Sends the initialization command (0xBE) if necessary."""
         # Read the status byte using the AHT20 status command (0x71).
-        status = self.bus.read_byte_data(self.address, 0x71)
+        command = smbus2.i2c_msg.write(self.address, [0x71])
+        response = smbus2.i2c_msg.read(self.address, 1)
+        self.bus.i2c_rdwr(command, response)
+        status = bytes(response)[0]
         if not (status & 0x08):  # 00001000
             # Send the 0xBE Initialization/Calibrate command with data parameters [0x08, 0x00].
             # This loads factory calibration coefficients into RAM.
-            self.bus.write_i2c_block_data(self.address, 0xBE, [0x08, 0x00])
+            command = smbus2.i2c_msg.write(self.address, [0xBE, 0x08, 0x00])
+            self.bus.i2c_rdwr(command)
             time.sleep(0.01)
 
     def read_metrics(self) -> tuple[float, float]:
         """Trigger a reading and return (temperature_celsius, relative_humidity_pct)."""
         # Send the 0xAC Measurement Trigger command with data parameters [0x33, 0x00]
         # This instructs the ASIC to sample MEMS (Micro-Electro-Mechanical Systems) sens.ors.
-        self.bus.write_i2c_block_data(self.address, 0xAC, [0x33, 0x00])
+        command = smbus2.i2c_msg.write(self.address, [0xAC, 0x33, 0x00])
+        self.bus.i2c_rdwr(command)
         time.sleep(0.08)  # Wait 80ms for measurement completion.
 
         # Read 7 raw data bytes.
         # Byte Index: [0]      [1]        [2]       [3]                 [4]        [5]        [6]
         # Contents:   [Status] [Hum High] [Hum Mid] [Hum Low/Temp High] [Temp Mid] [Temp Low] [CRC]
         # Bit Width:  8 bits   8 bits     8 bits    4 / 4 bits          8 bits     8 bits     8 bits
-        data = self.bus.read_i2c_block_data(self.address, 0x00, 7)
+        response = smbus2.i2c_msg.read(self.address, 7)
+        self.bus.i2c_rdwr(response)
+        data = bytes(response)
 
         # Extract the 20-bit raw humidity result.
         # 1. Shift Byte 1 left by 16 bits:                         [ H19 H18 H17 H16 H15 H14 H13 H12 | 00000000 | 00000000 ]
