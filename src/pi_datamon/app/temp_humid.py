@@ -23,8 +23,7 @@ class AHT20:
         """Initialize the sensor calibration state."""
         # Calibration is safe to request at startup, so avoid the optional
         # status read that some AHT20/AHT21 boards NACK.
-        command = smbus2.i2c_msg.write(self.address, [0xBE, 0x08, 0x00])
-        self.bus.i2c_rdwr(command)
+        self.bus.write_i2c_block_data(self.address, 0xBE, [0x08, 0x00])
         time.sleep(0.01)
 
     def read_metrics(self) -> tuple[float, float]:
