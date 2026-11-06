@@ -37,9 +37,12 @@ class AHT20:
         """Trigger a reading and return (temperature_celsius, relative_humidity_pct)."""
         if self.sensor is None:
             raise RuntimeError("AHT sensor is not initialized")
-        return round(self.sensor.temperature, 1), round(
-            self.sensor.relative_humidity, 1
-        )
+        try:
+            return round(self.sensor.temperature, 1), round(
+                self.sensor.relative_humidity, 1
+            )
+        except (OSError, RuntimeError):
+            return float("nan"), float("nan")
 
     def close(self) -> None:
         """Close the I2C bus connection gracefully."""
