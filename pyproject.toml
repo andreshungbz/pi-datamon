@@ -32,6 +32,9 @@ dependencies = [
     # Low-level I2C/SMBus communication library.
     # https://github.com/kplindegaard/smbus2
     "smbus2>=0.6.1",
+    "adafruit-circuitpython-ahtx0>=1.0.30",
+    "adafruit-blinka>=10.1.0",
+    "adafruit-blinka-raspberry-pi-pwm>=1.0.2",
 ]
 
 [project.scripts]
