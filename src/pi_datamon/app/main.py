@@ -8,7 +8,8 @@ from rich.live import Live
 
 from pi_datamon.app.distance import HCSR04
 from pi_datamon.app.oled import SSD1306
-from pi_datamon.app.temp_humid import AHT20
+
+# from pi_datamon.app.temp_humid import AHT20
 from pi_datamon.common.console import console, print_introduction
 from pi_datamon.common.utils import (
     append_csv_row,
@@ -47,7 +48,7 @@ def main() -> None:
     # Instantiate hardware interfaces for display and sensors.
     ultrasonic_sensor = HCSR04(trigger_pin=TRIG_PIN, echo_pin=ECHO_PIN)
     oled_display = SSD1306(bus_id=I2C_BUS_ID)
-    temp_humid_sensor = AHT20(bus_id=I2C_BUS_ID)
+    # temp_humid_sensor = AHT20(bus_id=I2C_BUS_ID)
 
     # Configure mode-cycling button.
     button = Button(BUTTON_PIN, pull_up=True, bounce_time=0.05)
@@ -78,30 +79,22 @@ def main() -> None:
                 dist_cm = ultrasonic_sensor.read_distance_cm()
 
                 # Read Temperature_C and Humidity_Percent.
-                try:
-                    temp_c, hum_pct = temp_humid_sensor.read_metrics()
-                except OSError as error:
-                    console.print(
-                        f"[bold yellow]Warning:[/bold yellow] Failed to read temperature/humidity - {error}"
-                    )
-                    temp_c, hum_pct = float("nan"), float("nan")
+                # temp_c, hum_pct = temp_humid_sensor.read_metrics()
 
                 # Refresh the terminal display.
                 live.update(
                     make_status_table(
                         iso_timestamp,
                         elapsed_seconds,
-                        temp_c,
-                        hum_pct,
+                        25.0,
+                        50.0,
                         dist_cm,
                         mode=oled_display.mode,
                     )
                 )
 
                 # Render active sensor mode to the OLED display.
-                oled_display.render(
-                    temperature=temp_c, humidity=hum_pct, distance=dist_cm
-                )
+                oled_display.render(temperature=25.0, humidity=50.0, distance=dist_cm)
 
                 # Append a new record to the CSV log file.
                 iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -109,8 +102,8 @@ def main() -> None:
                     CSV_FILE_PATH,
                     iso_timestamp,
                     elapsed_seconds,
-                    temp_c,
-                    hum_pct,
+                    25.0,
+                    50.0,
                     dist_cm,
                 )
 
@@ -124,7 +117,7 @@ def main() -> None:
         # Clean up and close hardware interfaces.
         ultrasonic_sensor.close()
         oled_display.device.cleanup()
-        temp_humid_sensor.close()
+        # temp_humid_sensor.close()
 
 
 if __name__ == "__main__":
