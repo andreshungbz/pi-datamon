@@ -23,6 +23,7 @@
       # GUI toolkit for Python, used for the visualizer.
       # https://docs.python.org/3/library/tkinter.html
       python314Packages.tkinter
+      zlib
     ];
 
   # https://devenv.sh/languages/
