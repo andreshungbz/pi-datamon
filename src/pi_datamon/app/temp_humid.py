@@ -20,18 +20,12 @@ class AHT20:
         self._initialize_sensor()
 
     def _initialize_sensor(self) -> None:
-        """Sends the initialization command (0xBE) if necessary."""
-        # Read the status byte using the AHT20 status command (0x71).
-        command = smbus2.i2c_msg.write(self.address, [0x71])
-        response = smbus2.i2c_msg.read(self.address, 1)
-        self.bus.i2c_rdwr(command, response)
-        status = bytes(response)[0]
-        if not (status & 0x08):  # 00001000
-            # Send the 0xBE Initialization/Calibrate command with data parameters [0x08, 0x00].
-            # This loads factory calibration coefficients into RAM.
-            command = smbus2.i2c_msg.write(self.address, [0xBE, 0x08, 0x00])
-            self.bus.i2c_rdwr(command)
-            time.sleep(0.01)
+        """Initialize the sensor calibration state."""
+        # Calibration is safe to request at startup, so avoid the optional
+        # status read that some AHT20/AHT21 boards NACK.
+        command = smbus2.i2c_msg.write(self.address, [0xBE, 0x08, 0x00])
+        self.bus.i2c_rdwr(command)
+        time.sleep(0.01)
 
     def read_metrics(self) -> tuple[float, float]:
         """Trigger a reading and return (temperature_celsius, relative_humidity_pct)."""
