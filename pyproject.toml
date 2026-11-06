@@ -35,6 +35,8 @@ dependencies = [
     "adafruit-circuitpython-ahtx0>=1.0.30",
     "adafruit-blinka>=10.1.0",
     "adafruit-blinka-raspberry-pi-pwm>=1.0.2",
+    "gpiod>=2.2.2,<3",
+    "rpi-ws281x>=4.0.0",
 ]
 
 [project.scripts]
