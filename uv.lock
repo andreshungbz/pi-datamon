@@ -623,6 +623,7 @@ dependencies = [
     { name = "adafruit-blinka" },
     { name = "adafruit-blinka-raspberry-pi-pwm" },
     { name = "adafruit-circuitpython-ahtx0" },
+    { name = "gpiod" },
     { name = "gpiozero" },
     { name = "luma-oled" },
     { name = "matplotlib" },
@@ -630,6 +631,7 @@ dependencies = [
     { name = "pigpio" },
     { name = "pillow" },
     { name = "rich" },
+    { name = "rpi-ws281x" },
     { name = "smbus2" },
 ]
 
@@ -638,6 +640,7 @@ requires-dist = [
     { name = "adafruit-blinka", specifier = ">=10.1.0" },
     { name = "adafruit-blinka-raspberry-pi-pwm", specifier = ">=1.0.2" },
     { name = "adafruit-circuitpython-ahtx0", specifier = ">=1.0.30" },
+    { name = "gpiod", specifier = ">=2.2.2,<3" },
     { name = "gpiozero", specifier = ">=2.0.1.post3" },
     { name = "luma-oled", specifier = ">=3.16.0" },
     { name = "matplotlib", specifier = ">=3.11.2" },
@@ -645,6 +648,7 @@ requires-dist = [
     { name = "pigpio", specifier = ">=1.78" },
     { name = "pillow", specifier = ">=13.0.0" },
     { name = "rich", specifier = ">=15.0.0" },
+    { name = "rpi-ws281x", specifier = ">=4.0.0" },
     { name = "smbus2", specifier = ">=0.6.1" },
 ]
 
@@ -780,6 +784,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/c0/8f/0722ca900cc807c13
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl", hash = "sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb", size = 310654, upload-time = "2026-04-12T08:24:02.83Z" },
 ]
+
+[[package]]
+name = "rpi-ws281x"
+version = "5.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c0/1e/642208a685c5e96d38323f42c75d9b24f95e2d1b8390dd104e04a712f29e/rpi_ws281x-5.0.0.tar.gz", hash = "sha256:00ce6db771436b778d0930245cf8ea2aae11008cc5fd67d57789c5422af3ee55", size = 64519, upload-time = "2023-05-16T12:04:22.463Z" }
 
 [[package]]
 name = "setuptools"
