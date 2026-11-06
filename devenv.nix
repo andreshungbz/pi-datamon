@@ -50,7 +50,7 @@
     if pgrep -x pigpiod >/dev/null; then
       echo "pigpiod is already running"
     else
-      sudo pigpiod
+      sudo "$(command -v pigpiod)"
       echo "pigpiod started"
     fi
   '';
