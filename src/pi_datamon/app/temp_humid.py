@@ -1,3 +1,4 @@
+import logging
 import time
 
 import adafruit_ahtx0  # type: ignore
@@ -6,6 +7,7 @@ import busio  # type: ignore
 
 # I2C Address
 AHT20_I2C_ADDR = 0x38
+logger = logging.getLogger(__name__)
 
 
 class AHT20:
@@ -23,26 +25,45 @@ class AHT20:
         time.sleep(0.5)
 
         self.sensor = None
+        self._unavailable = False
         for attempt in range(3):
             try:
                 self.sensor = adafruit_ahtx0.AHTx0(self.bus, address=self.address)
                 break
-            except Exception:
+            except (OSError, RuntimeError, ValueError) as error:
                 if attempt == 2:
-                    self.bus.deinit()
-                    raise
-                time.sleep(0.5)
+                    self._report_error(error)
+                else:
+                    time.sleep(0.5)
+            except Exception:
+                self.bus.deinit()
+                raise
+
+    def _report_error(self, error: Exception) -> None:
+        """Warn once per outage rather than printing on every polling cycle."""
+        if not self._unavailable:
+            logger.warning(
+                "AHT sensor at 0x%02X unavailable (%s); retrying next sample.",
+                self.address,
+                error,
+            )
+        self._unavailable = True
 
     def read_metrics(self) -> tuple[float, float]:
-        """Trigger a reading and return (temperature_celsius, relative_humidity_pct)."""
-        if self.sensor is None:
-            raise RuntimeError("AHT sensor is not initialized")
+        """Return (temperature_celsius, relative_humidity_pct), or NaNs on failure."""
         try:
-            return round(self.sensor.temperature, 1), round(
+            if self.sensor is None:
+                self.sensor = adafruit_ahtx0.AHTx0(self.bus, address=self.address)
+            metrics = round(self.sensor.temperature, 1), round(
                 self.sensor.relative_humidity, 1
             )
-        except (OSError, RuntimeError):
+        except (OSError, RuntimeError, ValueError) as error:
+            # Reinitialize after a failed transaction on the next polling cycle.
+            self.sensor = None
+            self._report_error(error)
             return float("nan"), float("nan")
+        self._unavailable = False
+        return metrics
 
     def close(self) -> None:
         """Close the I2C bus connection gracefully."""

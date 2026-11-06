@@ -57,12 +57,16 @@ class SSD1306:
             draw_thermometer_icon(draw, x=self.margin_x, y=self.margin_y)
             title = "TEMP MONITOR"
             label = "Temperature:"
-            value = f"{temperature:.1f} °C"
+            value = (
+                f"{temperature:.1f} °C"
+                if math.isfinite(temperature)
+                else "Sensor Error"
+            )
         elif self.mode == 1:
             draw_droplet_icon(draw, x=self.margin_x, y=self.margin_y)
             title = "HUMIDITY"
             label = "Relative:"
-            value = f"{humidity:.1f} %"
+            value = f"{humidity:.1f} %" if math.isfinite(humidity) else "Sensor Error"
         else:
             draw_sonar_icon(draw, x=self.margin_x, y=self.margin_y)
             title = "DISTANCE"
