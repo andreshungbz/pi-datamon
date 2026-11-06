@@ -45,5 +45,10 @@ class HCSR04:
 
     def close(self) -> None:
         """Release underlying GPIO pins."""
+        # Stop gpiozero's polling thread before DistanceSensor closes its
+        # trigger pin; otherwise a final background read can race shutdown.
+        queue = getattr(self.sensor, "_queue", None)
+        if queue is not None:
+            queue.stop()
         self.sensor.close()
         self.pin_factory.close()
