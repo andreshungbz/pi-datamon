@@ -36,8 +36,9 @@ class SSD1306:
         # Pre-calculated geometry layout constants.
         self.margin_x = 4
         self.margin_y = 4
-        self.icon_size = 16
-        self.text_x = self.margin_x + self.icon_size + 6  # X = 26
+        title_box = self.font_title.getbbox("TEMP MONITOR")
+        self.icon_size = int(title_box[3] - title_box[1])
+        self.text_x = 26
         self.separator_y = self.margin_y + 13  # Y = 17
         self.label_y = self.separator_y + 4  # Y = 21
         self.value_y = self.label_y + 14  # Y = 35
@@ -54,7 +55,9 @@ class SSD1306:
 
         # Draw icon and set variables for the current display mode (0 = Temperature, 1 = Humidity, 2 = Distance).
         if self.mode == 0:
-            draw_thermometer_icon(draw, x=self.margin_x, y=self.margin_y)
+            draw_thermometer_icon(
+                draw, x=self.margin_x, y=self.margin_y, size=self.icon_size
+            )
             title = "TEMP MONITOR"
             label = "Temperature:"
             value = (
@@ -63,12 +66,14 @@ class SSD1306:
                 else "Sensor Error"
             )
         elif self.mode == 1:
-            draw_droplet_icon(draw, x=self.margin_x, y=self.margin_y)
+            draw_droplet_icon(
+                draw, x=self.margin_x, y=self.margin_y, size=self.icon_size
+            )
             title = "HUMIDITY"
             label = "Relative:"
             value = f"{humidity:.1f} %" if math.isfinite(humidity) else "Sensor Error"
         else:
-            draw_sonar_icon(draw, x=self.margin_x, y=self.margin_y)
+            draw_sonar_icon(draw, x=self.margin_x, y=self.margin_y, size=self.icon_size)
             title = "DISTANCE"
             label = "Object Distance:"
             value = f"{distance:.1f} cm" if not math.isnan(distance) else "N/A"
