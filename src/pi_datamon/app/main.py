@@ -8,7 +8,7 @@ from rich.live import Live
 
 from pi_datamon.app.distance import HCSR04
 from pi_datamon.app.oled import SSD1306
-from pi_datamon.app.temp_humid import AHT20
+from pi_datamon.app.temp_humid import AHT21
 from pi_datamon.common.console import console, print_introduction
 from pi_datamon.common.utils import (
     append_csv_row,
@@ -47,7 +47,7 @@ def main() -> None:
     # Instantiate hardware interfaces for display and sensors.
     ultrasonic_sensor = HCSR04(trigger_pin=TRIG_PIN, echo_pin=ECHO_PIN)
     oled_display = SSD1306(bus_id=I2C_BUS_ID)
-    temp_humid_sensor = AHT20(bus_id=I2C_BUS_ID)
+    temp_humid_sensor = AHT21(bus_id=I2C_BUS_ID)
 
     # Configure mode-cycling button.
     button = Button(BUTTON_PIN, pull_up=True, bounce_time=0.05)
@@ -59,7 +59,7 @@ def main() -> None:
     )
 
     try:
-        # Create initial status layout.
+        # Create initial status table layout.
         now = datetime.now(TIMEZONE)
         iso_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
         initial_table = make_status_table(

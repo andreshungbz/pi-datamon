@@ -18,6 +18,7 @@
       # https://archive.kernel.org/oldwiki/i2c.wiki.kernel.org/index.php/I2C_Tools.html
       i2c-tools
       # Daemon for accurate GPIO timing with gpiozero.
+      # https://github.com/joan2937/pigpio
       pigpio
       # Low-level C and Python libraries for manipulating GPIO.
       # https://github.com/joan2937/lg
@@ -25,6 +26,8 @@
       # GUI toolkit for Python, used for the visualizer.
       # https://docs.python.org/3/library/tkinter.html
       python314Packages.tkinter
+      # Requied by luma.oled.
+      # https://github.com/madler/zlib
       zlib
     ];
 
@@ -46,6 +49,7 @@
     uv --version
   '';
 
+  # Script for starting the pigpiod daemon.
   scripts.pigpiod-start.exec = ''
     if pgrep -x pigpiod >/dev/null; then
       echo "pigpiod is already running"
