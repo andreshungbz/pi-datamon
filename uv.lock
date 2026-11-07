@@ -623,7 +623,7 @@ dependencies = [
     { name = "adafruit-blinka" },
     { name = "adafruit-blinka-raspberry-pi-pwm" },
     { name = "adafruit-circuitpython-ahtx0" },
-    { name = "gpiod" },
+    { name = "gpiod", marker = "sys_platform == 'linux'" },
     { name = "gpiozero" },
     { name = "luma-oled" },
     { name = "matplotlib" },
@@ -631,7 +631,7 @@ dependencies = [
     { name = "pigpio" },
     { name = "pillow" },
     { name = "rich" },
-    { name = "rpi-ws281x" },
+    { name = "rpi-ws281x", marker = "sys_platform == 'linux'" },
     { name = "smbus2" },
 ]
 
@@ -640,7 +640,7 @@ requires-dist = [
     { name = "adafruit-blinka", specifier = ">=10.1.0" },
     { name = "adafruit-blinka-raspberry-pi-pwm", specifier = ">=1.0.2" },
     { name = "adafruit-circuitpython-ahtx0", specifier = ">=1.0.30" },
-    { name = "gpiod", specifier = ">=2.2.2,<3" },
+    { name = "gpiod", marker = "sys_platform == 'linux'", specifier = ">=2.2.2,<3" },
     { name = "gpiozero", specifier = ">=2.0.1.post3" },
     { name = "luma-oled", specifier = ">=3.16.0" },
     { name = "matplotlib", specifier = ">=3.11.2" },
@@ -648,7 +648,7 @@ requires-dist = [
     { name = "pigpio", specifier = ">=1.78" },
     { name = "pillow", specifier = ">=13.0.0" },
     { name = "rich", specifier = ">=15.0.0" },
-    { name = "rpi-ws281x", specifier = ">=4.0.0" },
+    { name = "rpi-ws281x", marker = "sys_platform == 'linux'", specifier = ">=4.0.0" },
     { name = "smbus2", specifier = ">=0.6.1" },
 ]
 
