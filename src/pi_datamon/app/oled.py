@@ -16,7 +16,7 @@ SSD1306_I2C_ADDR = 0x3C
 
 
 class SSD1306:
-    """Handles 128x64 monochrome SSD1306 OLED canvas rendering and menu navigation."""
+    """Handles 128x64 blue/yellow SSD1306 OLED canvas rendering and menu navigation."""
 
     # Datasheet: https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 
@@ -49,7 +49,7 @@ class SSD1306:
 
     def render(self, temperature: float, humidity: float, distance: float) -> None:
         """Draw active page layout to PIL image buffer and push to SSD1306 GDDRAM."""
-        # Create a blank 1-bit monochrome image buffer in RAM (Mode '1': 0 = Black, 255 = White).
+        # Create a blank 1-bit blue/yellow image buffer in RAM (Mode '1': 0 = Black, 255 = White).
         image = Image.new("1", self.size, 0)
         draw = ImageDraw.Draw(image)
 

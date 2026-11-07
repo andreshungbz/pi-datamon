@@ -11,7 +11,7 @@ A data acquisition and monitoring system for temperature, humidity, and distance
 - Tactile Push Button
 - Jumper Wires
 - 2kΩ Resistor (x2)
-- SSD1306 Monochrome OLED Display ([Datasheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf))
+- SSD1306 Blue/Yellow OLED Display ([Datasheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf))
 - AHT20/1 Temperature and Humidity Sensor ([Datasheet](https://asairsensors.com/wp-content/uploads/2021/09/Data-Sheet-AHT20-Humidity-and-Temperature-Sensor-ASAIR-V1.0.03.pdf))
 - HC-SR04 Ultrasonic Distance Sensor ([Datasheet](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf))
 
