@@ -13,6 +13,7 @@ dependencies = [
     # https://github.com/gpiozero/gpiozero
     "gpiozero>=2.0.1.post3",
     # GPIO daemon client used for accurate ultrasonic timing.
+    # https://github.com/joan2937/pigpio
     "pigpio>=1.78",
     # Driver for OLED matrix displays.
     # https://github.com/rm-hull/luma.oled
@@ -32,13 +33,6 @@ dependencies = [
     # Low-level I2C/SMBus communication library.
     # https://github.com/kplindegaard/smbus2
     "smbus2>=0.6.1",
-    # Adafruit CircuitPython library for AHTx0 temperature and humidity sensors.
-    # https://github.com/adafruit/Adafruit_CircuitPython_AHTx0
-    "adafruit-circuitpython-ahtx0>=1.0.30",
-    "adafruit-blinka>=10.1.0",
-    "adafruit-blinka-raspberry-pi-pwm>=1.0.2",
-    "gpiod>=2.2.2,<3; sys_platform == 'linux'",
-    "rpi-ws281x>=4.0.0; sys_platform == 'linux'",
 ]
 
 [project.scripts]
