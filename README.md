@@ -12,7 +12,7 @@ A data acquisition and monitoring system for temperature, humidity, and distance
 - Jumper Wires
 - 2kΩ Resistor (x2)
 - SSD1306 Blue/Yellow OLED Display ([Datasheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf))
-- AHT20/1 Temperature and Humidity Sensor ([Datasheet](https://asairsensors.com/wp-content/uploads/2021/09/Data-Sheet-AHT20-Humidity-and-Temperature-Sensor-ASAIR-V1.0.03.pdf))
+- AHT21 Temperature and Humidity Sensor ([Datasheet](https://asairsensors.com/wp-content/uploads/2021/09/Data-Sheet-AHT20-Humidity-and-Temperature-Sensor-ASAIR-V1.0.03.pdf))
 - HC-SR04 Ultrasonic Distance Sensor ([Datasheet](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf))
 
 ### Breadboard Layout
@@ -25,7 +25,7 @@ Project dependencies are defined in both the `devenv.nix` development environmen
 
 ### Enabling I2C on Raspberry Pi
 
-The Raspberry Pi needs to be configured to enable I2C for the AHT20 sensor and the SSD1306 display.
+The Raspberry Pi needs to be configured to enable I2C for the AHT21 sensor and the SSD1306 display.
 
 1. On Raspberry Pi OS, configure I2C, then reboot.
 
@@ -79,4 +79,10 @@ Then, while sensor data is being recorded or simulated, run the visualizer, whic
 
 ```
 just visualize
+```
+
+To statically visualize the existing `log/sensor_log.csv` file, run:
+
+```
+just graph
 ```
