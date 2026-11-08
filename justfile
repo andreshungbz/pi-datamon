@@ -30,6 +30,10 @@ run:
 visualize:
     @uv run pi-datamon-visualizer
 
+# Render the existing Pi Datamon log once.
+graph:
+    @uv run pi-datamon-visualizer --history
+
 # Run Pi Datamon Simulator.
 simulate:
     @uv run pi-datamon-simulator

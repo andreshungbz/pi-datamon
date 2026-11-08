@@ -37,7 +37,8 @@ dependencies = [
 
 [project.scripts]
 pi-datamon-app = "pi_datamon.app.main:main"
-pi-datamon-visualizer = "pi_datamon.visualizer.main:main"
+pi-datamon-visualizer = "pi_datamon.visualizer.main:cli_main"
+pi-datamon-visualizer-history = "pi_datamon.visualizer.main:history_main"
 pi-datamon-simulator = "pi_datamon.simulator.main:main"
 
 [build-system]

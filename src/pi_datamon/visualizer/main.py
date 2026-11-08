@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 import platform
@@ -70,16 +71,24 @@ _start_row_index: int | None = None  # Index of the first row to display
 _last_row_count: int = 0  # Last known row count
 
 
-def main() -> None:
+def main(historical: bool = False) -> None:
     global _ani, _start_row_index, _last_row_count
 
     print_introduction(
         color="cyan",
         title="pi-datamon/visualizer",
-        description="Real-time data visualizer and time-series graphing for pi-datamon/app",
+        description=(
+            "Historical log visualizer"
+            if historical
+            else "Real-time data visualizer and time-series graphing for pi-datamon/app"
+        ),
     )
 
-    if not CSV_FILE_PATH.exists():
+    if historical:
+        # Historical mode renders the complete existing log in one update.
+        _start_row_index = 0
+        _last_row_count = 0
+    elif not CSV_FILE_PATH.exists():
         console.print(
             f"[bold yellow]Waiting for log file at [/bold yellow][cyan]{CSV_FILE_PATH}[/cyan]..."
         )
@@ -394,10 +403,14 @@ def main() -> None:
 
     console.print(f"Visualizing [cyan]{CSV_FILE_PATH}[/cyan].")
 
-    # Attach the update function to the Matplotlib animation loop.
-    _ani = animation.FuncAnimation(
-        fig, update_plots, interval=POLL_INTERVAL_MS, cache_frame_data=False
-    )
+    if historical:
+        # Use the same rendering path as live mode, but only process the log once.
+        update_plots(0)
+    else:
+        # Attach the update function to the Matplotlib animation loop.
+        _ani = animation.FuncAnimation(
+            fig, update_plots, interval=POLL_INTERVAL_MS, cache_frame_data=False
+        )
 
     try:
         # Start the Matplotlib event loop.
@@ -406,5 +419,24 @@ def main() -> None:
         console.print("\n[bold yellow]Visualizer stopped.[/bold yellow]")
 
 
+def cli_main(argv: list[str] | None = None) -> None:
+    """Run the visualizer from the command line."""
+    parser = argparse.ArgumentParser(description="Visualize pi-datamon sensor logs")
+    parser.add_argument(
+        "--history",
+        "--historical",
+        action="store_true",
+        dest="historical",
+        help="render the existing log once instead of monitoring for new rows",
+    )
+    args = parser.parse_args(argv)
+    main(historical=args.historical)
+
+
+def history_main() -> None:
+    """Render the existing sensor log once."""
+    main(historical=True)
+
+
 if __name__ == "__main__":
-    main()
+    cli_main()
