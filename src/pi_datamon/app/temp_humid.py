@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class AHT21:
     """Low-level AHT20/AHT21 driver using smbus2."""
 
-    # Datasheet: https://asairsensors.com/wp-content/uploads/2021/09/Data-Sheet-AHT20-Humidity-and-Temperature-Sensor-ASAIR-V1.0.03.pdf
+    # Datasheet: https://asairsensors.com/wp-content/uploads/2021/09/Data-Sheet-AHT21-Humidity-and-Temperature-Sensor-ASAIR-V1.0.03.pdf
 
     def __init__(self, bus_id: int, address: int = AHT21_I2C_ADDR):
         self.bus_id = bus_id
