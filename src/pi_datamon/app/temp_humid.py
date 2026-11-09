@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Any, cast
 
 import smbus2  # type: ignore
 
@@ -71,11 +72,14 @@ class AHT21:
             self.bus.write_i2c_block_data(self.address, 0xAC, [0x33, 0x00])
             time.sleep(0.08)  # Wait 80 ms for measurement completion.
 
-            # Read 7 raw data bytes.
+            # Read 7 raw data bytes. AHT21 uses a raw I2C read here rather than
+            # an SMBus block read, which would send an extra register byte.
             # Byte Index: [0]      [1]        [2]       [3]                 [4]        [5]        [6]
             # Contents:   [Status] [Hum High] [Hum Mid] [Hum Low/Temp High] [Temp Mid] [Temp Low] [CRC]
             # Bit Width:  8 bits   8 bits     8 bits    4 / 4 bits          8 bits     8 bits     8 bits
-            data = self.bus.read_i2c_block_data(self.address, 0x00, 7)
+            read = smbus2.i2c_msg.read(self.address, 7)
+            self.bus.i2c_rdwr(read)
+            data: list[int] = list(cast(Any, read))
 
             # Extract the 20-bit raw humidity result.
             # 1. Shift Byte 1 left by 16 bits:                         [ H19 H18 H17 H16 H15 H14 H13 H12 | 00000000 | 00000000 ]
