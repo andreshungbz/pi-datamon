@@ -48,7 +48,13 @@ check:
 
 # Clear contents of the log directory.
 cleanup:
-    rm log/*
+    @mkdir -p log
+    @find log -mindepth 1 -maxdepth 1 -type f -delete
+    @echo "Log files cleaned."
+
+# Copy sample sensor data to the log directory.
+copy-sample-log:
+    cp docs/sample_sensor_log.csv log/sensor_log.csv
 
 # ==================================================================================== #
 # FILESYSTEM
