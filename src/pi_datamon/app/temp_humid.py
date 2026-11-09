@@ -82,7 +82,7 @@ class AHT21:
             # 2. Shift Byte 2 left by 8 bits, OR with previous result: [ H19 H18 H17 H16 H15 H14 H13 H12 | H11 H10 H9 H8 H7 H6 H5 H4 | 00000000 ]
             # 3. OR previous result with Byte 3:                       [ H19 H18 H17 H16 H15 H14 H13 H12 | H11 H10 H9 H8 H7 H6 H5 H4 | H3 H2 H1 H0 T19 T18 T17 T16 ]
             # 4. Shift previous result right by 4 bits:                [ H19 H18 H17 H16 H15 H14 H13 H12 | H11 H10 H9 H8 H7 H6 H5 H4 | H3 H2 H1 H0 ]
-            raw_humidity = ((data[1] << 16) | (data[2] << 8) | data[3]) >> 4
+            raw_humidity = (data[1] << 12) | (data[2] << 4) | (data[3] >> 4)
 
             # Extract the 20-bit raw temperature result.
             # 1. Mask Byte 3 with 0x0F and shift left by 16 bits: [ T19 T18 T17 T16 | 00000000 | 00000000 ]
