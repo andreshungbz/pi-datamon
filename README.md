@@ -2,6 +2,8 @@
 
 A data acquisition and monitoring system for temperature, humidity, and distance.
 
+![Pi Datamon System Photo](docs/system_photo.png)
+
 ## Hardware Setup
 
 ### Components
@@ -86,3 +88,9 @@ To statically visualize the existing `log/sensor_log.csv` file, run:
 ```
 just graph
 ```
+
+#### Sample Data
+
+A sample sensor log is available in `docs/sample_sensor_log.csv`. Below shows its visualization. Run `just copy-sample-log` to copy it to the log directory for visualization.
+
+![Sample Sensor Log Visualization](docs/sample_sensor_log_graph.png)
