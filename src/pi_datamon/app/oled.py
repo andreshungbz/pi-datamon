@@ -38,6 +38,8 @@ class SSD1306:
         self.margin_y = 4
         title_box = self.font_title.getbbox("TEMP MONITOR")
         self.icon_size = int(title_box[3] - title_box[1])
+        self.icon_y = self.margin_y + int(title_box[1])
+        self.font_value = ImageFont.load_default(size=16)
         self.text_x = 26
         self.separator_y = self.margin_y + 13  # Y = 17
         self.label_y = self.separator_y + 4  # Y = 21
@@ -56,7 +58,7 @@ class SSD1306:
         # Draw icon and set variables for the current display mode (0 = Temperature, 1 = Humidity, 2 = Distance).
         if self.mode == 0:
             draw_thermometer_icon(
-                draw, x=self.margin_x, y=self.margin_y, size=self.icon_size
+                draw, x=self.margin_x, y=self.icon_y, size=self.icon_size
             )
             title = "TEMP MONITOR"
             label = "Temperature:"
@@ -66,14 +68,12 @@ class SSD1306:
                 else "Sensor Error"
             )
         elif self.mode == 1:
-            draw_droplet_icon(
-                draw, x=self.margin_x, y=self.margin_y, size=self.icon_size
-            )
+            draw_droplet_icon(draw, x=self.margin_x, y=self.icon_y, size=self.icon_size)
             title = "HUMIDITY"
             label = "Relative:"
             value = f"{humidity:.1f} %" if math.isfinite(humidity) else "Sensor Error"
         else:
-            draw_sonar_icon(draw, x=self.margin_x, y=self.margin_y, size=self.icon_size)
+            draw_sonar_icon(draw, x=self.margin_x, y=self.icon_y, size=self.icon_size)
             title = "DISTANCE"
             label = "Object Distance:"
             value = f"{distance:.1f} cm" if not math.isnan(distance) else "N/A"
@@ -96,7 +96,7 @@ class SSD1306:
         draw.text((self.text_x, self.label_y), label, font=self.font_data, fill=255)
 
         # Draw measured value.
-        draw.text((self.text_x, self.value_y), value, font=self.font_data, fill=255)
+        draw.text((self.text_x, self.value_y), value, font=self.font_value, fill=255)
 
         # Write 1-bit canvas buffer to OLED display.
         self.device.display(image)  # type: ignore
